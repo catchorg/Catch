@@ -31,7 +31,7 @@ namespace Catch {
     namespace {
         const int MaxExitCode = 255;
 
-        IStreamingReporterPtr createReporter(std::string const& reporterName, IConfig const* config) {
+        IStreamingReporterPtr createReporter(std::string const& reporterName, ReporterConfig const& config) {
             auto reporter = Catch::getRegistryHub().getReporterRegistry().create(reporterName, config);
             CATCH_ENFORCE(reporter, "No reporter registered with name: '" << reporterName << "'");
 
@@ -39,8 +39,10 @@ namespace Catch {
         }
 
         IStreamingReporterPtr makeReporter(Config const* config) {
-            if (Catch::getRegistryHub().getReporterRegistry().getListeners().empty()) {
-                return createReporter(config->getReporterName(), config);
+            if (Catch::getRegistryHub().getReporterRegistry().getListeners().empty()
+                    && config->getReportersAndOutputFiles().size() == 1) {
+                auto& stream = config->getReporterOutputStream(0);
+                return createReporter(config->getReportersAndOutputFiles()[0].reporterName, ReporterConfig(config, stream));
             }
 
             // On older platforms, returning unique_ptr<ListeningReporter>
@@ -50,11 +52,19 @@ namespace Catch {
             // it a bit and downcast the pointer manually.
             auto ret = Detail::unique_ptr<IStreamingReporter>(new ListeningReporter(config));
             auto& multi = static_cast<ListeningReporter&>(*ret);
+
             auto const& listeners = Catch::getRegistryHub().getReporterRegistry().getListeners();
             for (auto const& listener : listeners) {
-                multi.addListener(listener->create(Catch::ReporterConfig(config)));
+                multi.addListener(listener->create(Catch::ReporterConfig(config, config->defaultStream())));
             }
-            multi.addReporter(createReporter(config->getReporterName(), config));
+
+            std::size_t reporterIdx = 0;
+            for (auto const& reporterAndFile : config->getReportersAndOutputFiles()) {
+                auto& stream = config->getReporterOutputStream(reporterIdx);
+                multi.addReporter(createReporter(reporterAndFile.reporterName, ReporterConfig(config, stream)));
+                reporterIdx++;
+            }
+
             return ret;
         }
 

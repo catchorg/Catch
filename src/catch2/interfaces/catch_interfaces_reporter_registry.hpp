@@ -22,13 +22,14 @@ namespace Catch {
     using IStreamingReporterPtr = Detail::unique_ptr<IStreamingReporter>;
     struct IReporterFactory;
     using IReporterFactoryPtr = Detail::unique_ptr<IReporterFactory>;
+    struct ReporterConfig;
 
     struct IReporterRegistry {
         using FactoryMap = std::map<std::string, IReporterFactoryPtr>;
         using Listeners = std::vector<IReporterFactoryPtr>;
 
         virtual ~IReporterRegistry();
-        virtual IStreamingReporterPtr create( std::string const& name, IConfig const* config ) const = 0;
+        virtual IStreamingReporterPtr create( std::string const& name, ReporterConfig const& config ) const = 0;
         virtual FactoryMap const& getFactories() const = 0;
         virtual Listeners const& getListeners() const = 0;
     };

@@ -15,7 +15,6 @@ namespace Catch {
     class ListeningReporter final : public IStreamingReporter {
         using Reporters = std::vector<IStreamingReporterPtr>;
         Reporters m_listeners;
-        IStreamingReporterPtr m_reporter = nullptr;
 
     public:
         ListeningReporter( IConfig const* config ):

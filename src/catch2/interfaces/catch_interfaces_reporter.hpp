@@ -32,8 +32,6 @@ namespace Catch {
     struct IConfig;
 
     struct ReporterConfig {
-        explicit ReporterConfig( IConfig const* _fullConfig );
-
         ReporterConfig( IConfig const* _fullConfig, std::ostream& _stream );
 
         std::ostream& stream() const;
