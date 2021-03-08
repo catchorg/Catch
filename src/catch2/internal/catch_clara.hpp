@@ -53,6 +53,9 @@ namespace Catch {
             ShortCircuitSame
         };
 
+        struct accept_many_t {};
+        constexpr accept_many_t accept_many;
+
         namespace Detail {
 
             // Traits for extracting arg and return type of lambdas (for single
@@ -394,6 +397,11 @@ namespace Catch {
                 }
             };
 
+            template <typename L> struct BoundManyLambda : BoundLambda<L> {
+                explicit BoundManyLambda( L const& lambda ): BoundLambda<L>( lambda ) {}
+                bool isContainer() const override { return true; }
+            };
+
             template <typename L> struct BoundFlagLambda : BoundFlagRefBase {
                 L m_lambda;
 
@@ -458,6 +466,11 @@ namespace Catch {
                     m_ref( std::make_shared<BoundLambda<LambdaT>>( ref ) ),
                     m_hint( hint ) {}
 
+                template <typename LambdaT>
+                ParserRefImpl( accept_many_t, LambdaT const& ref, std::string const& hint ):
+                    m_ref( std::make_shared<BoundManyLambda<LambdaT>>( ref ) ),
+                    m_hint( hint ) {}
+
                 auto operator()( std::string const& description ) -> DerivedT& {
                     m_description = description;
                     return static_cast<DerivedT&>( *this );
@@ -517,6 +530,10 @@ namespace Catch {
             template <typename LambdaT>
             Opt(LambdaT const& ref, std::string const& hint) :
                 ParserRefImpl(ref, hint) {}
+
+            template <typename LambdaT>
+            Opt(accept_many_t, LambdaT const& ref, std::string const& hint) :
+                ParserRefImpl(accept_many, ref, hint) {}
 
             template <typename T>
             Opt(T& ref, std::string const& hint) :
