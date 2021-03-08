@@ -31,14 +31,6 @@ namespace Catch {
         } // unnamed namespace
     } // namespace Detail
 
-    std::ostream& operator<<(std::ostream &os, ConfigData::ReporterAndFile const& reporter) {
-        os << "{ " << reporter.reporterName;
-        if (reporter.outputFileName) {
-            os << ", " << *reporter.outputFileName;
-        }
-        return os << " }";
-    }
-
     Config::Config( ConfigData const& data )
     :   m_data( data ),
         m_defaultStream( openStream(data.defaultOutputFilename) )

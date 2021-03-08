@@ -13,7 +13,7 @@
 #include <catch2/internal/catch_option.hpp>
 #include <catch2/internal/catch_unique_ptr.hpp>
 
-#include <iosfwd> // included as a transitive dep anyway
+#include <ostream>
 #include <vector>
 #include <string>
 
@@ -30,6 +30,13 @@ namespace Catch {
 
             friend bool operator==(Catch::ConfigData::ReporterAndFile const& a, Catch::ConfigData::ReporterAndFile const& b) {
                 return a.reporterName == b.reporterName && a.outputFileName == b.outputFileName;
+            }
+            friend std::ostream& operator<<(std::ostream &os, ReporterAndFile const& reporter) {
+                os << "{ " << reporter.reporterName;
+                if (reporter.outputFileName) {
+                    os << ", " << *reporter.outputFileName;
+                }
+                return os << " }";
             }
         };
 
@@ -133,7 +140,6 @@ namespace Catch {
         TestSpec m_testSpec;
         bool m_hasTestFilters = false;
     };
-    std::ostream& operator<<(std::ostream &os, Catch::ConfigData::ReporterAndFile const& reporter);
 } // end namespace Catch
 
 #endif // CATCH_CONFIG_HPP_INCLUDED
