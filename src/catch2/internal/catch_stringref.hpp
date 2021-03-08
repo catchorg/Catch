@@ -31,6 +31,8 @@ namespace Catch {
 
     public: // construction
         constexpr StringRef() noexcept = default;
+        constexpr StringRef(StringRef const&) noexcept = default;
+        constexpr StringRef& operator=(StringRef const&) noexcept = default;
 
         StringRef( char const* rawChars ) noexcept;
 

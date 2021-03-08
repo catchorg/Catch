@@ -35,7 +35,17 @@ TEST_CASE( "StringRef", "[Strings][StringRef]" ) {
         REQUIRE_THROWS(original.c_str());
         REQUIRE_NOTHROW(original.data());
     }
-
+    SECTION( "Copy construction" ) {
+        StringRef original = StringRef( "original string" );
+        StringRef copy = original;
+        REQUIRE(original.begin() == copy.begin());
+    }
+    SECTION( "Copy assignment" ) {
+        StringRef original = StringRef( "original string" );
+        StringRef copy;
+        copy = original;
+        REQUIRE(original.begin() == copy.begin());
+    }
 
     SECTION( "Substrings" ) {
         StringRef s = "hello world!";
