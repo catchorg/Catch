@@ -13,6 +13,7 @@
 #include <catch2/internal/catch_test_spec_parser.hpp>
 #include <catch2/interfaces/catch_interfaces_tag_alias_registry.hpp>
 
+#include <ostream>
 
 namespace Catch {
     namespace Detail {
@@ -29,6 +30,14 @@ namespace Catch {
             };
         } // unnamed namespace
     } // namespace Detail
+
+    std::ostream& operator<<(std::ostream &os, ConfigData::ReporterAndFile const& reporter) {
+        os << "{ " << reporter.reporterName;
+        if (reporter.outputFileName) {
+            os << ", " << *reporter.outputFileName;
+        }
+        return os << " }";
+    }
 
     Config::Config( ConfigData const& data )
     :   m_data( data ),

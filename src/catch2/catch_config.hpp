@@ -13,6 +13,7 @@
 #include <catch2/internal/catch_option.hpp>
 #include <catch2/internal/catch_unique_ptr.hpp>
 
+#include <iosfwd> // included as a transitive dep anyway
 #include <vector>
 #include <string>
 
@@ -132,7 +133,7 @@ namespace Catch {
         TestSpec m_testSpec;
         bool m_hasTestFilters = false;
     };
-
+    std::ostream& operator<<(std::ostream &os, Catch::ConfigData::ReporterAndFile const& reporter);
 } // end namespace Catch
 
 #endif // CATCH_CONFIG_HPP_INCLUDED
