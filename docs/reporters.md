@@ -35,6 +35,17 @@ You see what reporters are available from the command line by running with `--li
 
 By default all these reports are written to stdout, but can be redirected to a file with [`-o` or `--out`](command-line.md#sending-output-to-a-file)
 
+<a id="multiple-reporters"></a>
+## Using multiple reporters
+
+Multiple reporters may be used at the same time, e.g. to save a machine-readable output to a file but still print the human-readable output to the console:
+```
+-r console -r xml:result.xml -r junit:result-junit.xml
+```
+
+The output file name is given after the reporter name, delimited by a colon. If omitted, it defaults to the file name specified by `-o` (or stdout). Only one reporter may use the default output.
+
+
 ## Writing your own reporter
 
 You can write your own custom reporter and register it with Catch.
