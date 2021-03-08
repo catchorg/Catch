@@ -11,6 +11,35 @@
 
 #include <string>
 
+TEST_CASE("is_unary_function", "[clara][compilation]") {
+    auto unary1 = [](int) {};
+    auto unary2 = [](std::string const&) {};
+    auto const unary3 = [](std::string const&) {};
+    auto unary4 = [](int) { return 42; };
+    void unary5(char);
+    double unary6(long);
+
+    double binary1(long, int);
+    auto binary2 = [](int, char) {};
+    auto nullary1 = []() {};
+    auto nullary2 = []() {return 42;};
+
+    STATIC_REQUIRE(Catch::Clara::Detail::is_unary_function<decltype(unary1)>::value);
+    STATIC_REQUIRE(Catch::Clara::Detail::is_unary_function<decltype(unary2)>::value);
+    STATIC_REQUIRE(Catch::Clara::Detail::is_unary_function<decltype(unary3)>::value);
+    STATIC_REQUIRE(Catch::Clara::Detail::is_unary_function<decltype(unary4)>::value);
+    STATIC_REQUIRE(Catch::Clara::Detail::is_unary_function<decltype(unary5)>::value);
+    STATIC_REQUIRE(Catch::Clara::Detail::is_unary_function<decltype(unary6)>::value);
+
+    STATIC_REQUIRE_FALSE(Catch::Clara::Detail::is_unary_function<decltype(binary1)>::value);
+    STATIC_REQUIRE_FALSE(Catch::Clara::Detail::is_unary_function<decltype(binary2)>::value);
+    STATIC_REQUIRE_FALSE(Catch::Clara::Detail::is_unary_function<decltype(nullary1)>::value);
+    STATIC_REQUIRE_FALSE(Catch::Clara::Detail::is_unary_function<decltype(nullary2)>::value);
+    STATIC_REQUIRE_FALSE(Catch::Clara::Detail::is_unary_function<int>::value);
+    STATIC_REQUIRE_FALSE(Catch::Clara::Detail::is_unary_function<std::string const&>::value);
+}
+
+
 TEST_CASE("Clara::Arg supports single-arg parse the way Opt does", "[clara][arg][compilation]") {
     std::string name;
     auto p = Catch::Clara::Arg(name, "just one arg");

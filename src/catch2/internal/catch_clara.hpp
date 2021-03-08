@@ -37,6 +37,7 @@
 #include <ostream>
 #include <sstream>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 namespace Catch {
@@ -57,6 +58,18 @@ namespace Catch {
         constexpr accept_many_t accept_many;
 
         namespace Detail {
+            template <typename F, typename = void>
+            struct is_unary_function : std::false_type {};
+
+            struct fake_arg {
+                template <typename T>
+                operator T();
+            };
+
+            template<typename... Ts> struct make_void { using type = void; };
+
+            template <typename F>
+            struct is_unary_function<F, typename make_void<decltype(std::declval<F>()(fake_arg()))>::type> : std::true_type {};
 
             // Traits for extracting arg and return type of lambdas (for single
             // argument lambdas)
@@ -456,12 +469,12 @@ namespace Catch {
                     m_ref( ref ) {}
 
             public:
-                template <typename T>
+                template <typename T, typename = typename std::enable_if<!Detail::is_unary_function<T>::value>::type>
                 ParserRefImpl( T& ref, std::string const& hint ):
                     m_ref( std::make_shared<BoundValueRef<T>>( ref ) ),
                     m_hint( hint ) {}
 
-                template <typename LambdaT>
+                template <typename LambdaT, typename = typename std::enable_if<Detail::is_unary_function<LambdaT>::value>::type>
                 ParserRefImpl( LambdaT const& ref, std::string const& hint ):
                     m_ref( std::make_shared<BoundLambda<LambdaT>>( ref ) ),
                     m_hint( hint ) {}
@@ -527,7 +540,7 @@ namespace Catch {
 
             explicit Opt(bool& ref);
 
-            template <typename LambdaT>
+            template <typename LambdaT, typename = typename std::enable_if<Detail::is_unary_function<LambdaT>::value>::type>
             Opt(LambdaT const& ref, std::string const& hint) :
                 ParserRefImpl(ref, hint) {}
 
@@ -535,7 +548,7 @@ namespace Catch {
             Opt(accept_many_t, LambdaT const& ref, std::string const& hint) :
                 ParserRefImpl(accept_many, ref, hint) {}
 
-            template <typename T>
+            template <typename T, typename = typename std::enable_if<!Detail::is_unary_function<T>::value>::type>
             Opt(T& ref, std::string const& hint) :
                 ParserRefImpl(ref, hint) {}
 
