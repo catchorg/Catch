@@ -28,9 +28,10 @@ namespace Catch {
             // If none, the output goes to the default output.
             Option<std::string> outputFileName;
 
-            friend bool operator==(Catch::ConfigData::ReporterAndFile const& a, Catch::ConfigData::ReporterAndFile const& b) {
+            friend bool operator==(ReporterAndFile const& a, ReporterAndFile const& b) {
                 return a.reporterName == b.reporterName && a.outputFileName == b.outputFileName;
             }
+
             friend std::ostream& operator<<(std::ostream &os, ReporterAndFile const& reporter) {
                 os << "{ " << reporter.reporterName;
                 if (reporter.outputFileName) {
