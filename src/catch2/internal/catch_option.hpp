@@ -63,6 +63,15 @@ namespace Catch {
             return some();
         }
 
+        friend bool operator==(Option const& a, Option const& b) {
+            if (a.none() && b.none()) {
+                return true;
+            } else if (a.some() && b.some()) {
+                return *a == *b;
+            } else {
+                return false;
+            }
+        }
     private:
         T *nullableValue;
         alignas(alignof(T)) char storage[sizeof(T)];
