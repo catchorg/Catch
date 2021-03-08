@@ -2874,6 +2874,35 @@ with expansion:
   "foo" == "foo"
 
 -------------------------------------------------------------------------------
+Clara::Opt supports accept-many lambdas
+  Parsing fails on multiple options without accept_many
+-------------------------------------------------------------------------------
+Clara.tests.cpp:<line number>
+...............................................................................
+
+Clara.tests.cpp:<line number>: PASSED:
+  CHECK_FALSE( parse_result )
+with expansion:
+  !{?}
+
+-------------------------------------------------------------------------------
+Clara::Opt supports accept-many lambdas
+  Parsing succeeds on multiple options with accept_many
+-------------------------------------------------------------------------------
+Clara.tests.cpp:<line number>
+...............................................................................
+
+Clara.tests.cpp:<line number>: PASSED:
+  CHECK( parse_result )
+with expansion:
+  {?}
+
+Clara.tests.cpp:<line number>: PASSED:
+  CHECK( res == std::vector<std::string>{ "aaa", "bbb" } )
+with expansion:
+  { "aaa", "bbb" } == { "aaa", "bbb" }
+
+-------------------------------------------------------------------------------
 Combining MatchAllOfGeneric does not nest
 -------------------------------------------------------------------------------
 Matchers.tests.cpp:<line number>
@@ -8662,9 +8691,9 @@ with expansion:
   false == false
 
 CmdLine.tests.cpp:<line number>: PASSED:
-  CHECK( config.reporterName == "console" )
+  CHECK( config.reporterSpecifications == std::vector<Catch::ConfigData::ReporterAndFile>{ {"console", {}} } )
 with expansion:
-  "console" == "console"
+  { { console } } == { { console } }
 
 CmdLine.tests.cpp:<line number>: PASSED:
   CHECK_FALSE( cfg.hasTestFilters() )
@@ -8764,14 +8793,18 @@ CmdLine.tests.cpp:<line number>
 ...............................................................................
 
 CmdLine.tests.cpp:<line number>: PASSED:
-  CHECK( cli.parse({"test", "-r", "console"}) )
+  CHECK( result )
 with expansion:
   {?}
+with message:
+  result.errorMessage() := ""
 
 CmdLine.tests.cpp:<line number>: PASSED:
-  REQUIRE( config.reporterName == "console" )
+  REQUIRE( config.reporterSpecifications == vec_ReporterAndFile{ {"console", {}} } )
 with expansion:
-  "console" == "console"
+  { { console } } == { { console } }
+with message:
+  result.errorMessage() := ""
 
 -------------------------------------------------------------------------------
 Process can be configured on command line
@@ -8782,14 +8815,18 @@ CmdLine.tests.cpp:<line number>
 ...............................................................................
 
 CmdLine.tests.cpp:<line number>: PASSED:
-  CHECK( cli.parse({"test", "-r", "xml"}) )
+  CHECK( result )
 with expansion:
   {?}
+with message:
+  result.errorMessage() := ""
 
 CmdLine.tests.cpp:<line number>: PASSED:
-  REQUIRE( config.reporterName == "xml" )
+  REQUIRE( config.reporterSpecifications == vec_ReporterAndFile{ {"xml", {}} } )
 with expansion:
-  "xml" == "xml"
+  { { xml } } == { { xml } }
+with message:
+  result.errorMessage() := ""
 
 -------------------------------------------------------------------------------
 Process can be configured on command line
@@ -8800,27 +8837,18 @@ CmdLine.tests.cpp:<line number>
 ...............................................................................
 
 CmdLine.tests.cpp:<line number>: PASSED:
-  CHECK( cli.parse({"test", "--reporter", "junit"}) )
+  CHECK( result )
 with expansion:
   {?}
+with message:
+  result.errorMessage() := ""
 
 CmdLine.tests.cpp:<line number>: PASSED:
-  REQUIRE( config.reporterName == "junit" )
+  REQUIRE( config.reporterSpecifications == vec_ReporterAndFile{ {"junit", {}} } )
 with expansion:
-  "junit" == "junit"
-
--------------------------------------------------------------------------------
-Process can be configured on command line
-  reporter
-  Only one reporter is accepted
--------------------------------------------------------------------------------
-CmdLine.tests.cpp:<line number>
-...............................................................................
-
-CmdLine.tests.cpp:<line number>: PASSED:
-  REQUIRE_FALSE( cli.parse({ "test", "-r", "xml", "-r", "junit" }) )
-with expansion:
-  !{?}
+  { { junit } } == { { junit } }
+with message:
+  result.errorMessage() := ""
 
 -------------------------------------------------------------------------------
 Process can be configured on command line
@@ -8840,6 +8868,136 @@ CmdLine.tests.cpp:<line number>: PASSED:
 with expansion:
   "Unrecognized reporter, 'unsupported'. Check available with --list-reporters"
   contains: "Unrecognized reporter"
+
+-------------------------------------------------------------------------------
+Process can be configured on command line
+  reporter
+  With output file
+-------------------------------------------------------------------------------
+CmdLine.tests.cpp:<line number>
+...............................................................................
+
+CmdLine.tests.cpp:<line number>: PASSED:
+  CHECK( result )
+with expansion:
+  {?}
+with message:
+  result.errorMessage() := ""
+
+CmdLine.tests.cpp:<line number>: PASSED:
+  REQUIRE( config.reporterSpecifications == vec_ReporterAndFile{ {"console", "out.txt"s} } )
+with expansion:
+  { { console, out.txt } }
+  ==
+  { { console, out.txt } }
+with message:
+  result.errorMessage() := ""
+
+-------------------------------------------------------------------------------
+Process can be configured on command line
+  reporter
+  With Windows-like absolute path as output file
+-------------------------------------------------------------------------------
+CmdLine.tests.cpp:<line number>
+...............................................................................
+
+CmdLine.tests.cpp:<line number>: PASSED:
+  CHECK( result )
+with expansion:
+  {?}
+with message:
+  result.errorMessage() := ""
+
+CmdLine.tests.cpp:<line number>: PASSED:
+  REQUIRE( config.reporterSpecifications == vec_ReporterAndFile{ {"console", "C:\\Temp\\out.txt"s} } )
+with expansion:
+  { { console, C:\Temp\out.txt } }
+  ==
+  { { console, C:\Temp\out.txt } }
+with message:
+  result.errorMessage() := ""
+
+-------------------------------------------------------------------------------
+Process can be configured on command line
+  reporter
+  Output file cannot be empty
+-------------------------------------------------------------------------------
+CmdLine.tests.cpp:<line number>
+...............................................................................
+
+CmdLine.tests.cpp:<line number>: PASSED:
+  CHECK( !result )
+with expansion:
+  true
+
+CmdLine.tests.cpp:<line number>: PASSED:
+  REQUIRE_THAT( result.errorMessage(), Contains("empty filename") )
+with expansion:
+  "Reporter 'console' has empty filename specified as its output. Supply a
+  filename or remove the colon to use the default output." contains: "empty
+  filename"
+
+-------------------------------------------------------------------------------
+Process can be configured on command line
+  reporter
+  Multiple reporters
+  All with output files
+-------------------------------------------------------------------------------
+CmdLine.tests.cpp:<line number>
+...............................................................................
+
+CmdLine.tests.cpp:<line number>: PASSED:
+  CHECK( cli.parse({ "test", "-r", "xml:output.xml", "-r", "junit:output-junit.xml" }) )
+with expansion:
+  {?}
+
+CmdLine.tests.cpp:<line number>: PASSED:
+  REQUIRE( config.reporterSpecifications == vec_ReporterAndFile{ {"xml", "output.xml"s}, {"junit", "output-junit.xml"s} } )
+with expansion:
+  { { xml, output.xml }, { junit, output-junit.xml } }
+  ==
+  { { xml, output.xml }, { junit, output-junit.xml } }
+
+-------------------------------------------------------------------------------
+Process can be configured on command line
+  reporter
+  Multiple reporters
+  Mixed output files and default output
+-------------------------------------------------------------------------------
+CmdLine.tests.cpp:<line number>
+...............................................................................
+
+CmdLine.tests.cpp:<line number>: PASSED:
+  CHECK( cli.parse({ "test", "-r", "xml:output.xml", "-r", "console" }) )
+with expansion:
+  {?}
+
+CmdLine.tests.cpp:<line number>: PASSED:
+  REQUIRE( config.reporterSpecifications == vec_ReporterAndFile{ {"xml", "output.xml"s}, {"console", {}} } )
+with expansion:
+  { { xml, output.xml }, { console } }
+  ==
+  { { xml, output.xml }, { console } }
+
+-------------------------------------------------------------------------------
+Process can be configured on command line
+  reporter
+  Multiple reporters
+  cannot have multiple reporters with default output
+-------------------------------------------------------------------------------
+CmdLine.tests.cpp:<line number>
+...............................................................................
+
+CmdLine.tests.cpp:<line number>: PASSED:
+  CHECK( !result )
+with expansion:
+  true
+
+CmdLine.tests.cpp:<line number>: PASSED:
+  REQUIRE_THAT( result.errorMessage(), Contains("Only one reporter may have unspecified output file.") )
+with expansion:
+  "Only one reporter may have unspecified output file." contains: "Only one
+  reporter may have unspecified output file."
 
 -------------------------------------------------------------------------------
 Process can be configured on command line
@@ -9078,7 +9236,7 @@ with expansion:
   {?}
 
 CmdLine.tests.cpp:<line number>: PASSED:
-  REQUIRE( config.outputFilename == "filename.ext" )
+  REQUIRE( config.defaultOutputFilename == "filename.ext" )
 with expansion:
   "filename.ext" == "filename.ext"
 
@@ -9096,7 +9254,7 @@ with expansion:
   {?}
 
 CmdLine.tests.cpp:<line number>: PASSED:
-  REQUIRE( config.outputFilename == "filename.ext" )
+  REQUIRE( config.defaultOutputFilename == "filename.ext" )
 with expansion:
   "filename.ext" == "filename.ext"
 
@@ -10563,6 +10721,30 @@ String.tests.cpp:<line number>: PASSED:
 
 String.tests.cpp:<line number>: PASSED:
   REQUIRE_NOTHROW( original.data() )
+
+-------------------------------------------------------------------------------
+StringRef
+  Copy construction
+-------------------------------------------------------------------------------
+String.tests.cpp:<line number>
+...............................................................................
+
+String.tests.cpp:<line number>: PASSED:
+  REQUIRE( original.begin() == copy.begin() )
+with expansion:
+  "original string" == "original string"
+
+-------------------------------------------------------------------------------
+StringRef
+  Copy assignment
+-------------------------------------------------------------------------------
+String.tests.cpp:<line number>
+...............................................................................
+
+String.tests.cpp:<line number>: PASSED:
+  REQUIRE( original.begin() == copy.begin() )
+with expansion:
+  "original string" == "original string"
 
 -------------------------------------------------------------------------------
 StringRef
@@ -14624,6 +14806,60 @@ Tricky.tests.cpp:<line number>
 No assertions in test case 'has printf'
 
 -------------------------------------------------------------------------------
+is_unary_function
+-------------------------------------------------------------------------------
+Clara.tests.cpp:<line number>
+...............................................................................
+
+Clara.tests.cpp:<line number>: PASSED:
+with message:
+  Catch::Clara::Detail::is_unary_function<decltype(unary1)>::value
+
+Clara.tests.cpp:<line number>: PASSED:
+with message:
+  Catch::Clara::Detail::is_unary_function<decltype(unary2)>::value
+
+Clara.tests.cpp:<line number>: PASSED:
+with message:
+  Catch::Clara::Detail::is_unary_function<decltype(unary3)>::value
+
+Clara.tests.cpp:<line number>: PASSED:
+with message:
+  Catch::Clara::Detail::is_unary_function<decltype(unary4)>::value
+
+Clara.tests.cpp:<line number>: PASSED:
+with message:
+  Catch::Clara::Detail::is_unary_function<decltype(unary5)>::value
+
+Clara.tests.cpp:<line number>: PASSED:
+with message:
+  Catch::Clara::Detail::is_unary_function<decltype(unary6)>::value
+
+Clara.tests.cpp:<line number>: PASSED:
+with message:
+  !(Catch::Clara::Detail::is_unary_function<decltype(binary1)>::value)
+
+Clara.tests.cpp:<line number>: PASSED:
+with message:
+  !(Catch::Clara::Detail::is_unary_function<decltype(binary2)>::value)
+
+Clara.tests.cpp:<line number>: PASSED:
+with message:
+  !(Catch::Clara::Detail::is_unary_function<decltype(nullary1)>::value)
+
+Clara.tests.cpp:<line number>: PASSED:
+with message:
+  !(Catch::Clara::Detail::is_unary_function<decltype(nullary2)>::value)
+
+Clara.tests.cpp:<line number>: PASSED:
+with message:
+  !(Catch::Clara::Detail::is_unary_function<int>::value)
+
+Clara.tests.cpp:<line number>: PASSED:
+with message:
+  !(Catch::Clara::Detail::is_unary_function<std::string const&>::value)
+
+-------------------------------------------------------------------------------
 just failure
 -------------------------------------------------------------------------------
 Message.tests.cpp:<line number>
@@ -16768,6 +17004,6 @@ Misc.tests.cpp:<line number>
 Misc.tests.cpp:<line number>: PASSED:
 
 ===============================================================================
-test cases:  356 |  266 passed |  86 failed |  4 failed as expected
-assertions: 2105 | 1936 passed | 148 failed | 21 failed as expected
+test cases:  358 |  268 passed |  86 failed |  4 failed as expected
+assertions: 2133 | 1964 passed | 148 failed | 21 failed as expected
 

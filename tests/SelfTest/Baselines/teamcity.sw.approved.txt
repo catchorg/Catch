@@ -233,6 +233,8 @@ Exception.tests.cpp:<line number>|nunexpected exception with message:|n  "unexpe
 ##teamcity[testFinished name='Character pretty printing' duration="{duration}"]
 ##teamcity[testStarted name='Clara::Arg supports single-arg parse the way Opt does']
 ##teamcity[testFinished name='Clara::Arg supports single-arg parse the way Opt does' duration="{duration}"]
+##teamcity[testStarted name='Clara::Opt supports accept-many lambdas']
+##teamcity[testFinished name='Clara::Opt supports accept-many lambdas' duration="{duration}"]
 ##teamcity[testStarted name='Combining MatchAllOfGeneric does not nest']
 ##teamcity[testFinished name='Combining MatchAllOfGeneric does not nest' duration="{duration}"]
 ##teamcity[testStarted name='Combining MatchAnyOfGeneric does not nest']
@@ -687,6 +689,8 @@ Misc.tests.cpp:<line number>|nexpression failed|n  REQUIRE( testCheckedIf( false
 ##teamcity[testStarted name='has printf']
 loose text artifact
 ##teamcity[testFinished name='has printf' duration="{duration}"]
+##teamcity[testStarted name='is_unary_function']
+##teamcity[testFinished name='is_unary_function' duration="{duration}"]
 ##teamcity[testStarted name='just failure']
 Message.tests.cpp:<line number>|nexplicit failure with message:|n  "Previous info should not be seen"']
 ##teamcity[testFinished name='just failure' duration="{duration}"]

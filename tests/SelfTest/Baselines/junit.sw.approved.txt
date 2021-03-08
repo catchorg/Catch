@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuitesloose text artifact
 >
-  <testsuite name="<exe-name>" errors="17" failures="132" tests="2106" hostname="tbd" time="{duration}" timestamp="{iso8601-timestamp}">
+  <testsuite name="<exe-name>" errors="17" failures="132" tests="2134" hostname="tbd" time="{duration}" timestamp="{iso8601-timestamp}">
     <properties>
       <property name="filters" value="~[!nonportable]~[!benchmark]~[approvals] *"/>
       <property name="random-seed" value="1"/>
@@ -377,6 +377,8 @@ Exception.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="Character pretty printing/General chars" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Character pretty printing/Low ASCII" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Clara::Arg supports single-arg parse the way Opt does" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Clara::Opt supports accept-many lambdas/Parsing fails on multiple options without accept_many" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Clara::Opt supports accept-many lambdas/Parsing succeeds on multiple options with accept_many" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Combining MatchAllOfGeneric does not nest" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Combining MatchAnyOfGeneric does not nest" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Combining MatchNotOfGeneric does not nest" time="{duration}" status="run"/>
@@ -1037,8 +1039,13 @@ Message.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/-r/console" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/-r/xml" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/--reporter/junit" time="{duration}" status="run"/>
-    <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/Only one reporter is accepted" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/must match one of the available ones" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/With output file" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/With Windows-like absolute path as output file" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/Output file cannot be empty" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/Multiple reporters/All with output files" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/Multiple reporters/Mixed output files and default output" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="Process can be configured on command line/reporter/Multiple reporters/cannot have multiple reporters with default output" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Process can be configured on command line/debugger/-b" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Process can be configured on command line/debugger/--break" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="Process can be configured on command line/abort/-a aborts after first failure" time="{duration}" status="run"/>
@@ -1177,6 +1184,8 @@ Matchers.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="StringRef/Empty string" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="StringRef/From string literal" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="StringRef/From sub-string" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="StringRef/Copy construction" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="StringRef/Copy assignment" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="StringRef/Substrings/zero-based substring" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="StringRef/Substrings/non-zero-based substring" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="StringRef/Substrings/Pointer values of full refs should match" time="{duration}" status="run"/>
@@ -1550,6 +1559,7 @@ Misc.tests.cpp:<line number>
     <testcase classname="<exe-name>.global" name="even more nested SECTION tests/c/d (leaf)" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="even more nested SECTION tests/c/e (leaf)" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="even more nested SECTION tests/f (leaf)" time="{duration}" status="run"/>
+    <testcase classname="<exe-name>.global" name="is_unary_function" time="{duration}" status="run"/>
     <testcase classname="<exe-name>.global" name="just failure" time="{duration}" status="run">
       <failure type="FAIL">
 FAILED:

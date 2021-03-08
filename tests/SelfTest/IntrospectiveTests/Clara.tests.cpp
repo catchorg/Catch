@@ -4,7 +4,7 @@
 //        https://www.boost.org/LICENSE_1_0.txt)
 
 // SPDX-License-Identifier: BSL-1.0
-    
+
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/internal/catch_clara.hpp>
 
@@ -43,9 +43,9 @@ TEST_CASE("is_unary_function", "[clara][compilation]") {
 TEST_CASE("Clara::Arg supports single-arg parse the way Opt does", "[clara][arg][compilation]") {
     std::string name;
     auto p = Catch::Clara::Arg(name, "just one arg");
-    
+
     CHECK(name.empty());
-    
+
     p.parse( Catch::Clara::Args{ "UnitTest", "foo" } );
     REQUIRE(name == "foo");
 }

@@ -3,6 +3,9 @@
 >
   <file path="tests/<exe-name>/IntrospectiveTests/Clara.tests.cpp">
     <testCase name="Clara::Arg supports single-arg parse the way Opt does" duration="{duration}"/>
+    <testCase name="Clara::Opt supports accept-many lambdas/Parsing fails on multiple options without accept_many" duration="{duration}"/>
+    <testCase name="Clara::Opt supports accept-many lambdas/Parsing succeeds on multiple options with accept_many" duration="{duration}"/>
+    <testCase name="is_unary_function" duration="{duration}"/>
   </file>
   <file path="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp">
     <testCase name="#1905 -- test spec parser properly clears internal state between compound tests" duration="{duration}"/>
@@ -51,8 +54,13 @@
     <testCase name="Process can be configured on command line/reporter/-r/console" duration="{duration}"/>
     <testCase name="Process can be configured on command line/reporter/-r/xml" duration="{duration}"/>
     <testCase name="Process can be configured on command line/reporter/--reporter/junit" duration="{duration}"/>
-    <testCase name="Process can be configured on command line/reporter/Only one reporter is accepted" duration="{duration}"/>
     <testCase name="Process can be configured on command line/reporter/must match one of the available ones" duration="{duration}"/>
+    <testCase name="Process can be configured on command line/reporter/With output file" duration="{duration}"/>
+    <testCase name="Process can be configured on command line/reporter/With Windows-like absolute path as output file" duration="{duration}"/>
+    <testCase name="Process can be configured on command line/reporter/Output file cannot be empty" duration="{duration}"/>
+    <testCase name="Process can be configured on command line/reporter/Multiple reporters/All with output files" duration="{duration}"/>
+    <testCase name="Process can be configured on command line/reporter/Multiple reporters/Mixed output files and default output" duration="{duration}"/>
+    <testCase name="Process can be configured on command line/reporter/Multiple reporters/cannot have multiple reporters with default output" duration="{duration}"/>
     <testCase name="Process can be configured on command line/debugger/-b" duration="{duration}"/>
     <testCase name="Process can be configured on command line/debugger/--break" duration="{duration}"/>
     <testCase name="Process can be configured on command line/abort/-a aborts after first failure" duration="{duration}"/>
@@ -184,6 +192,8 @@
     <testCase name="StringRef/Empty string" duration="{duration}"/>
     <testCase name="StringRef/From string literal" duration="{duration}"/>
     <testCase name="StringRef/From sub-string" duration="{duration}"/>
+    <testCase name="StringRef/Copy construction" duration="{duration}"/>
+    <testCase name="StringRef/Copy assignment" duration="{duration}"/>
     <testCase name="StringRef/Substrings/zero-based substring" duration="{duration}"/>
     <testCase name="StringRef/Substrings/non-zero-based substring" duration="{duration}"/>
     <testCase name="StringRef/Substrings/Pointer values of full refs should match" duration="{duration}"/>

@@ -346,6 +346,9 @@ ToStringGeneral.tests.cpp:<line number>: passed: c == i for: 4 == 4
 ToStringGeneral.tests.cpp:<line number>: passed: c == i for: 5 == 5
 Clara.tests.cpp:<line number>: passed: name.empty() for: true
 Clara.tests.cpp:<line number>: passed: name == "foo" for: "foo" == "foo"
+Clara.tests.cpp:<line number>: passed: !(parse_result) for: !{?}
+Clara.tests.cpp:<line number>: passed: parse_result for: {?}
+Clara.tests.cpp:<line number>: passed: res == std::vector<std::string>{ "aaa", "bbb" } for: { "aaa", "bbb" } == { "aaa", "bbb" }
 Matchers.tests.cpp:<line number>: passed: with 1 message: 'std::is_same< decltype((MatcherA() && MatcherB()) && MatcherC()), Catch::Matchers::Detail::MatchAllOfGeneric<MatcherA, MatcherB, MatcherC> >::value'
 Matchers.tests.cpp:<line number>: passed: 1, (MatcherA() && MatcherB()) && MatcherC() for: 1 ( equals: (int) 1 or (float) 1.0f and equals: (long long) 1 and equals: (T) 1 )
 Matchers.tests.cpp:<line number>: passed: with 1 message: 'std::is_same< decltype(MatcherA() && (MatcherB() && MatcherC())), Catch::Matchers::Detail::MatchAllOfGeneric<MatcherA, MatcherB, MatcherC> >::value'
@@ -1189,7 +1192,7 @@ CmdLine.tests.cpp:<line number>: passed: config.processName == "test" for: "test
 CmdLine.tests.cpp:<line number>: passed: config.shouldDebugBreak == false for: false == false
 CmdLine.tests.cpp:<line number>: passed: config.abortAfter == -1 for: -1 == -1
 CmdLine.tests.cpp:<line number>: passed: config.noThrow == false for: false == false
-CmdLine.tests.cpp:<line number>: passed: config.reporterName == "console" for: "console" == "console"
+CmdLine.tests.cpp:<line number>: passed: config.reporterSpecifications == std::vector<Catch::ConfigData::ReporterAndFile>{ {"console", {}} } for: { { console } } == { { console } }
 CmdLine.tests.cpp:<line number>: passed: !(cfg.hasTestFilters()) for: !false
 CmdLine.tests.cpp:<line number>: passed: result for: {?}
 CmdLine.tests.cpp:<line number>: passed: cfg.hasTestFilters() for: true
@@ -1203,15 +1206,34 @@ CmdLine.tests.cpp:<line number>: passed: result for: {?}
 CmdLine.tests.cpp:<line number>: passed: cfg.hasTestFilters() for: true
 CmdLine.tests.cpp:<line number>: passed: cfg.testSpec().matches(*fakeTestCase("test1")) == false for: false == false
 CmdLine.tests.cpp:<line number>: passed: cfg.testSpec().matches(*fakeTestCase("alwaysIncluded")) for: true
-CmdLine.tests.cpp:<line number>: passed: cli.parse({"test", "-r", "console"}) for: {?}
-CmdLine.tests.cpp:<line number>: passed: config.reporterName == "console" for: "console" == "console"
-CmdLine.tests.cpp:<line number>: passed: cli.parse({"test", "-r", "xml"}) for: {?}
-CmdLine.tests.cpp:<line number>: passed: config.reporterName == "xml" for: "xml" == "xml"
-CmdLine.tests.cpp:<line number>: passed: cli.parse({"test", "--reporter", "junit"}) for: {?}
-CmdLine.tests.cpp:<line number>: passed: config.reporterName == "junit" for: "junit" == "junit"
-CmdLine.tests.cpp:<line number>: passed: !(cli.parse({ "test", "-r", "xml", "-r", "junit" })) for: !{?}
+CmdLine.tests.cpp:<line number>: passed: result for: {?} with 1 message: 'result.errorMessage() := ""'
+CmdLine.tests.cpp:<line number>: passed: config.reporterSpecifications == vec_ReporterAndFile{ {"console", {}} } for: { { console } } == { { console } } with 1 message: 'result.errorMessage() := ""'
+CmdLine.tests.cpp:<line number>: passed: result for: {?} with 1 message: 'result.errorMessage() := ""'
+CmdLine.tests.cpp:<line number>: passed: config.reporterSpecifications == vec_ReporterAndFile{ {"xml", {}} } for: { { xml } } == { { xml } } with 1 message: 'result.errorMessage() := ""'
+CmdLine.tests.cpp:<line number>: passed: result for: {?} with 1 message: 'result.errorMessage() := ""'
+CmdLine.tests.cpp:<line number>: passed: config.reporterSpecifications == vec_ReporterAndFile{ {"junit", {}} } for: { { junit } } == { { junit } } with 1 message: 'result.errorMessage() := ""'
 CmdLine.tests.cpp:<line number>: passed: !result for: true
 CmdLine.tests.cpp:<line number>: passed: result.errorMessage(), Contains("Unrecognized reporter") for: "Unrecognized reporter, 'unsupported'. Check available with --list-reporters" contains: "Unrecognized reporter"
+CmdLine.tests.cpp:<line number>: passed: result for: {?} with 1 message: 'result.errorMessage() := ""'
+CmdLine.tests.cpp:<line number>: passed: config.reporterSpecifications == vec_ReporterAndFile{ {"console", "out.txt"s} } for: { { console, out.txt } }
+==
+{ { console, out.txt } } with 1 message: 'result.errorMessage() := ""'
+CmdLine.tests.cpp:<line number>: passed: result for: {?} with 1 message: 'result.errorMessage() := ""'
+CmdLine.tests.cpp:<line number>: passed: config.reporterSpecifications == vec_ReporterAndFile{ {"console", "C:\\Temp\\out.txt"s} } for: { { console, C:\Temp\out.txt } }
+==
+{ { console, C:\Temp\out.txt } } with 1 message: 'result.errorMessage() := ""'
+CmdLine.tests.cpp:<line number>: passed: !result for: true
+CmdLine.tests.cpp:<line number>: passed: result.errorMessage(), Contains("empty filename") for: "Reporter 'console' has empty filename specified as its output. Supply a filename or remove the colon to use the default output." contains: "empty filename"
+CmdLine.tests.cpp:<line number>: passed: cli.parse({ "test", "-r", "xml:output.xml", "-r", "junit:output-junit.xml" }) for: {?}
+CmdLine.tests.cpp:<line number>: passed: config.reporterSpecifications == vec_ReporterAndFile{ {"xml", "output.xml"s}, {"junit", "output-junit.xml"s} } for: { { xml, output.xml }, { junit, output-junit.xml } }
+==
+{ { xml, output.xml }, { junit, output-junit.xml } }
+CmdLine.tests.cpp:<line number>: passed: cli.parse({ "test", "-r", "xml:output.xml", "-r", "console" }) for: {?}
+CmdLine.tests.cpp:<line number>: passed: config.reporterSpecifications == vec_ReporterAndFile{ {"xml", "output.xml"s}, {"console", {}} } for: { { xml, output.xml }, { console } }
+==
+{ { xml, output.xml }, { console } }
+CmdLine.tests.cpp:<line number>: passed: !result for: true
+CmdLine.tests.cpp:<line number>: passed: result.errorMessage(), Contains("Only one reporter may have unspecified output file.") for: "Only one reporter may have unspecified output file." contains: "Only one reporter may have unspecified output file."
 CmdLine.tests.cpp:<line number>: passed: cli.parse({"test", "-b"}) for: {?}
 CmdLine.tests.cpp:<line number>: passed: config.shouldDebugBreak == true for: true == true
 CmdLine.tests.cpp:<line number>: passed: cli.parse({"test", "--break"}) for: {?}
@@ -1237,9 +1259,9 @@ CmdLine.tests.cpp:<line number>: passed: config.noThrow for: true
 CmdLine.tests.cpp:<line number>: passed: cli.parse({"test", "--nothrow"}) for: {?}
 CmdLine.tests.cpp:<line number>: passed: config.noThrow for: true
 CmdLine.tests.cpp:<line number>: passed: cli.parse({"test", "-o", "filename.ext"}) for: {?}
-CmdLine.tests.cpp:<line number>: passed: config.outputFilename == "filename.ext" for: "filename.ext" == "filename.ext"
+CmdLine.tests.cpp:<line number>: passed: config.defaultOutputFilename == "filename.ext" for: "filename.ext" == "filename.ext"
 CmdLine.tests.cpp:<line number>: passed: cli.parse({"test", "--out", "filename.ext"}) for: {?}
-CmdLine.tests.cpp:<line number>: passed: config.outputFilename == "filename.ext" for: "filename.ext" == "filename.ext"
+CmdLine.tests.cpp:<line number>: passed: config.defaultOutputFilename == "filename.ext" for: "filename.ext" == "filename.ext"
 CmdLine.tests.cpp:<line number>: passed: cli.parse({"test", "-abe"}) for: {?}
 CmdLine.tests.cpp:<line number>: passed: config.abortAfter == 1 for: 1 == 1
 CmdLine.tests.cpp:<line number>: passed: config.shouldDebugBreak for: true
@@ -1494,6 +1516,8 @@ String.tests.cpp:<line number>: passed: original == "original"
 String.tests.cpp:<line number>: passed: !(original.isNullTerminated()) for: !false
 String.tests.cpp:<line number>: passed: original.c_str()
 String.tests.cpp:<line number>: passed: original.data()
+String.tests.cpp:<line number>: passed: original.begin() == copy.begin() for: "original string" == "original string"
+String.tests.cpp:<line number>: passed: original.begin() == copy.begin() for: "original string" == "original string"
 String.tests.cpp:<line number>: passed: ss.empty() == false for: false == false
 String.tests.cpp:<line number>: passed: ss.size() == 5 for: 5 == 5
 String.tests.cpp:<line number>: passed: std::strncmp( ss.data(), "hello", 5 ) == 0 for: 0 == 0
@@ -2066,6 +2090,18 @@ Misc.tests.cpp:<line number>: passed:
 Misc.tests.cpp:<line number>: passed:
 Misc.tests.cpp:<line number>: passed:
 loose text artifact
+Clara.tests.cpp:<line number>: passed: with 1 message: 'Catch::Clara::Detail::is_unary_function<decltype(unary1)>::value'
+Clara.tests.cpp:<line number>: passed: with 1 message: 'Catch::Clara::Detail::is_unary_function<decltype(unary2)>::value'
+Clara.tests.cpp:<line number>: passed: with 1 message: 'Catch::Clara::Detail::is_unary_function<decltype(unary3)>::value'
+Clara.tests.cpp:<line number>: passed: with 1 message: 'Catch::Clara::Detail::is_unary_function<decltype(unary4)>::value'
+Clara.tests.cpp:<line number>: passed: with 1 message: 'Catch::Clara::Detail::is_unary_function<decltype(unary5)>::value'
+Clara.tests.cpp:<line number>: passed: with 1 message: 'Catch::Clara::Detail::is_unary_function<decltype(unary6)>::value'
+Clara.tests.cpp:<line number>: passed: with 1 message: '!(Catch::Clara::Detail::is_unary_function<decltype(binary1)>::value)'
+Clara.tests.cpp:<line number>: passed: with 1 message: '!(Catch::Clara::Detail::is_unary_function<decltype(binary2)>::value)'
+Clara.tests.cpp:<line number>: passed: with 1 message: '!(Catch::Clara::Detail::is_unary_function<decltype(nullary1)>::value)'
+Clara.tests.cpp:<line number>: passed: with 1 message: '!(Catch::Clara::Detail::is_unary_function<decltype(nullary2)>::value)'
+Clara.tests.cpp:<line number>: passed: with 1 message: '!(Catch::Clara::Detail::is_unary_function<int>::value)'
+Clara.tests.cpp:<line number>: passed: with 1 message: '!(Catch::Clara::Detail::is_unary_function<std::string const&>::value)'
 Message.tests.cpp:<line number>: failed: explicitly with 1 message: 'Previous info should not be seen'
 Message.tests.cpp:<line number>: failed: explicitly with 1 message: 'previous unscoped info SHOULD not be seen'
 Misc.tests.cpp:<line number>: passed: l == std::numeric_limits<long long>::max() for: 9223372036854775807 (0x<hex digits>)

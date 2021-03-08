@@ -3120,6 +3120,39 @@ Nor would this
       </Expression>
       <OverallResult success="true"/>
     </TestCase>
+    <TestCase name="Clara::Opt supports accept-many lambdas" tags="[clara][opt]" filename="tests/<exe-name>/IntrospectiveTests/Clara.tests.cpp" >
+      <Section name="Parsing fails on multiple options without accept_many" filename="tests/<exe-name>/IntrospectiveTests/Clara.tests.cpp" >
+        <Expression success="true" type="CHECK_FALSE" filename="tests/<exe-name>/IntrospectiveTests/Clara.tests.cpp" >
+          <Original>
+            !(parse_result)
+          </Original>
+          <Expanded>
+            !{?}
+          </Expanded>
+        </Expression>
+        <OverallResults successes="1" failures="0" expectedFailures="0"/>
+      </Section>
+      <Section name="Parsing succeeds on multiple options with accept_many" filename="tests/<exe-name>/IntrospectiveTests/Clara.tests.cpp" >
+        <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/Clara.tests.cpp" >
+          <Original>
+            parse_result
+          </Original>
+          <Expanded>
+            {?}
+          </Expanded>
+        </Expression>
+        <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/Clara.tests.cpp" >
+          <Original>
+            res == std::vector&lt;std::string>{ "aaa", "bbb" }
+          </Original>
+          <Expanded>
+            { "aaa", "bbb" } == { "aaa", "bbb" }
+          </Expanded>
+        </Expression>
+        <OverallResults successes="2" failures="0" expectedFailures="0"/>
+      </Section>
+      <OverallResult success="true"/>
+    </TestCase>
     <TestCase name="Combining MatchAllOfGeneric does not nest" tags="[matchers][templated]" filename="tests/<exe-name>/UsageTests/Matchers.tests.cpp" >
       <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/UsageTests/Matchers.tests.cpp" >
         <Original>
@@ -10575,10 +10608,10 @@ Nor would this
         </Expression>
         <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
           <Original>
-            config.reporterName == "console"
+            config.reporterSpecifications == std::vector&lt;Catch::ConfigData::ReporterAndFile>{ {"console", {}} }
           </Original>
           <Expanded>
-            "console" == "console"
+            { { console } } == { { console } }
           </Expanded>
         </Expression>
         <Expression success="true" type="CHECK_FALSE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
@@ -10707,20 +10740,26 @@ Nor would this
       </Section>
       <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
         <Section name="-r/console" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+          <Info>
+            result.errorMessage() := ""
+          </Info>
           <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
             <Original>
-              cli.parse({"test", "-r", "console"})
+              result
             </Original>
             <Expanded>
               {?}
             </Expanded>
           </Expression>
+          <Info>
+            result.errorMessage() := ""
+          </Info>
           <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
             <Original>
-              config.reporterName == "console"
+              config.reporterSpecifications == vec_ReporterAndFile{ {"console", {}} }
             </Original>
             <Expanded>
-              "console" == "console"
+              { { console } } == { { console } }
             </Expanded>
           </Expression>
           <OverallResults successes="2" failures="0" expectedFailures="0"/>
@@ -10729,20 +10768,26 @@ Nor would this
       </Section>
       <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
         <Section name="-r/xml" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+          <Info>
+            result.errorMessage() := ""
+          </Info>
           <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
             <Original>
-              cli.parse({"test", "-r", "xml"})
+              result
             </Original>
             <Expanded>
               {?}
             </Expanded>
           </Expression>
+          <Info>
+            result.errorMessage() := ""
+          </Info>
           <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
             <Original>
-              config.reporterName == "xml"
+              config.reporterSpecifications == vec_ReporterAndFile{ {"xml", {}} }
             </Original>
             <Expanded>
-              "xml" == "xml"
+              { { xml } } == { { xml } }
             </Expanded>
           </Expression>
           <OverallResults successes="2" failures="0" expectedFailures="0"/>
@@ -10751,39 +10796,31 @@ Nor would this
       </Section>
       <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
         <Section name="--reporter/junit" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+          <Info>
+            result.errorMessage() := ""
+          </Info>
           <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
             <Original>
-              cli.parse({"test", "--reporter", "junit"})
+              result
             </Original>
             <Expanded>
               {?}
             </Expanded>
           </Expression>
+          <Info>
+            result.errorMessage() := ""
+          </Info>
           <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
             <Original>
-              config.reporterName == "junit"
+              config.reporterSpecifications == vec_ReporterAndFile{ {"junit", {}} }
             </Original>
             <Expanded>
-              "junit" == "junit"
+              { { junit } } == { { junit } }
             </Expanded>
           </Expression>
           <OverallResults successes="2" failures="0" expectedFailures="0"/>
         </Section>
         <OverallResults successes="2" failures="0" expectedFailures="0"/>
-      </Section>
-      <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
-        <Section name="Only one reporter is accepted" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
-          <Expression success="true" type="REQUIRE_FALSE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
-            <Original>
-              !(cli.parse({ "test", "-r", "xml", "-r", "junit" }))
-            </Original>
-            <Expanded>
-              !{?}
-            </Expanded>
-          </Expression>
-          <OverallResults successes="1" failures="0" expectedFailures="0"/>
-        </Section>
-        <OverallResults successes="1" failures="0" expectedFailures="0"/>
       </Section>
       <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
         <Section name="must match one of the available ones" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
@@ -10803,6 +10840,167 @@ Nor would this
               "Unrecognized reporter, 'unsupported'. Check available with --list-reporters" contains: "Unrecognized reporter"
             </Expanded>
           </Expression>
+          <OverallResults successes="2" failures="0" expectedFailures="0"/>
+        </Section>
+        <OverallResults successes="2" failures="0" expectedFailures="0"/>
+      </Section>
+      <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Section name="With output file" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+          <Info>
+            result.errorMessage() := ""
+          </Info>
+          <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+            <Original>
+              result
+            </Original>
+            <Expanded>
+              {?}
+            </Expanded>
+          </Expression>
+          <Info>
+            result.errorMessage() := ""
+          </Info>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+            <Original>
+              config.reporterSpecifications == vec_ReporterAndFile{ {"console", "out.txt"s} }
+            </Original>
+            <Expanded>
+              { { console, out.txt } }
+==
+{ { console, out.txt } }
+            </Expanded>
+          </Expression>
+          <OverallResults successes="2" failures="0" expectedFailures="0"/>
+        </Section>
+        <OverallResults successes="2" failures="0" expectedFailures="0"/>
+      </Section>
+      <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Section name="With Windows-like absolute path as output file" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+          <Info>
+            result.errorMessage() := ""
+          </Info>
+          <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+            <Original>
+              result
+            </Original>
+            <Expanded>
+              {?}
+            </Expanded>
+          </Expression>
+          <Info>
+            result.errorMessage() := ""
+          </Info>
+          <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+            <Original>
+              config.reporterSpecifications == vec_ReporterAndFile{ {"console", "C:\\Temp\\out.txt"s} }
+            </Original>
+            <Expanded>
+              { { console, C:\Temp\out.txt } }
+==
+{ { console, C:\Temp\out.txt } }
+            </Expanded>
+          </Expression>
+          <OverallResults successes="2" failures="0" expectedFailures="0"/>
+        </Section>
+        <OverallResults successes="2" failures="0" expectedFailures="0"/>
+      </Section>
+      <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Section name="Output file cannot be empty" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+          <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+            <Original>
+              !result
+            </Original>
+            <Expanded>
+              true
+            </Expanded>
+          </Expression>
+          <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+            <Original>
+              result.errorMessage(), Contains("empty filename")
+            </Original>
+            <Expanded>
+              "Reporter 'console' has empty filename specified as its output. Supply a filename or remove the colon to use the default output." contains: "empty filename"
+            </Expanded>
+          </Expression>
+          <OverallResults successes="2" failures="0" expectedFailures="0"/>
+        </Section>
+        <OverallResults successes="2" failures="0" expectedFailures="0"/>
+      </Section>
+      <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Section name="Multiple reporters" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+          <Section name="All with output files" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+            <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+              <Original>
+                cli.parse({ "test", "-r", "xml:output.xml", "-r", "junit:output-junit.xml" })
+              </Original>
+              <Expanded>
+                {?}
+              </Expanded>
+            </Expression>
+            <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+              <Original>
+                config.reporterSpecifications == vec_ReporterAndFile{ {"xml", "output.xml"s}, {"junit", "output-junit.xml"s} }
+              </Original>
+              <Expanded>
+                { { xml, output.xml }, { junit, output-junit.xml } }
+==
+{ { xml, output.xml }, { junit, output-junit.xml } }
+              </Expanded>
+            </Expression>
+            <OverallResults successes="2" failures="0" expectedFailures="0"/>
+          </Section>
+          <OverallResults successes="2" failures="0" expectedFailures="0"/>
+        </Section>
+        <OverallResults successes="2" failures="0" expectedFailures="0"/>
+      </Section>
+      <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Section name="Multiple reporters" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+          <Section name="Mixed output files and default output" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+            <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+              <Original>
+                cli.parse({ "test", "-r", "xml:output.xml", "-r", "console" })
+              </Original>
+              <Expanded>
+                {?}
+              </Expanded>
+            </Expression>
+            <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+              <Original>
+                config.reporterSpecifications == vec_ReporterAndFile{ {"xml", "output.xml"s}, {"console", {}} }
+              </Original>
+              <Expanded>
+                { { xml, output.xml }, { console } }
+==
+{ { xml, output.xml }, { console } }
+              </Expanded>
+            </Expression>
+            <OverallResults successes="2" failures="0" expectedFailures="0"/>
+          </Section>
+          <OverallResults successes="2" failures="0" expectedFailures="0"/>
+        </Section>
+        <OverallResults successes="2" failures="0" expectedFailures="0"/>
+      </Section>
+      <Section name="reporter" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+        <Section name="Multiple reporters" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+          <Section name="cannot have multiple reporters with default output" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+            <Expression success="true" type="CHECK" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+              <Original>
+                !result
+              </Original>
+              <Expanded>
+                true
+              </Expanded>
+            </Expression>
+            <Expression success="true" type="REQUIRE_THAT" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
+              <Original>
+                result.errorMessage(), Contains("Only one reporter may have unspecified output file.")
+              </Original>
+              <Expanded>
+                "Only one reporter may have unspecified output file." contains: "Only one reporter may have unspecified output file."
+              </Expanded>
+            </Expression>
+            <OverallResults successes="2" failures="0" expectedFailures="0"/>
+          </Section>
           <OverallResults successes="2" failures="0" expectedFailures="0"/>
         </Section>
         <OverallResults successes="2" failures="0" expectedFailures="0"/>
@@ -11098,7 +11296,7 @@ Nor would this
           </Expression>
           <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
             <Original>
-              config.outputFilename == "filename.ext"
+              config.defaultOutputFilename == "filename.ext"
             </Original>
             <Expanded>
               "filename.ext" == "filename.ext"
@@ -11120,7 +11318,7 @@ Nor would this
           </Expression>
           <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/CmdLine.tests.cpp" >
             <Original>
-              config.outputFilename == "filename.ext"
+              config.defaultOutputFilename == "filename.ext"
             </Original>
             <Expanded>
               "filename.ext" == "filename.ext"
@@ -12645,6 +12843,28 @@ Message from section two
           </Expanded>
         </Expression>
         <OverallResults successes="4" failures="0" expectedFailures="0"/>
+      </Section>
+      <Section name="Copy construction" filename="tests/<exe-name>/IntrospectiveTests/String.tests.cpp" >
+        <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/String.tests.cpp" >
+          <Original>
+            original.begin() == copy.begin()
+          </Original>
+          <Expanded>
+            "original string" == "original string"
+          </Expanded>
+        </Expression>
+        <OverallResults successes="1" failures="0" expectedFailures="0"/>
+      </Section>
+      <Section name="Copy assignment" filename="tests/<exe-name>/IntrospectiveTests/String.tests.cpp" >
+        <Expression success="true" type="REQUIRE" filename="tests/<exe-name>/IntrospectiveTests/String.tests.cpp" >
+          <Original>
+            original.begin() == copy.begin()
+          </Original>
+          <Expanded>
+            "original string" == "original string"
+          </Expanded>
+        </Expression>
+        <OverallResults successes="1" failures="0" expectedFailures="0"/>
       </Section>
       <Section name="Substrings" filename="tests/<exe-name>/IntrospectiveTests/String.tests.cpp" >
         <Section name="zero-based substring" filename="tests/<exe-name>/IntrospectiveTests/String.tests.cpp" >
@@ -17247,6 +17467,9 @@ There is no extra whitespace here
 loose text artifact
       <OverallResult success="false"/>
     </TestCase>
+    <TestCase name="is_unary_function" tags="[clara][compilation]" filename="tests/<exe-name>/IntrospectiveTests/Clara.tests.cpp" >
+      <OverallResult success="true"/>
+    </TestCase>
     <TestCase name="just failure" tags="[.][fail][isolated info][messages]" filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
       <Failure filename="tests/<exe-name>/UsageTests/Message.tests.cpp" >
         Previous info should not be seen
@@ -19715,9 +19938,9 @@ loose text artifact
       </Section>
       <OverallResult success="true"/>
     </TestCase>
-    <OverallResults successes="1936" failures="149" expectedFailures="21"/>
-    <OverallResultsCases successes="266" failures="86" expectedFailures="4"/>
+    <OverallResults successes="1964" failures="149" expectedFailures="21"/>
+    <OverallResultsCases successes="268" failures="86" expectedFailures="4"/>
   </Group>
-  <OverallResults successes="1936" failures="148" expectedFailures="21"/>
-  <OverallResultsCases successes="266" failures="86" expectedFailures="4"/>
+  <OverallResults successes="1964" failures="148" expectedFailures="21"/>
+  <OverallResultsCases successes="268" failures="86" expectedFailures="4"/>
 </Catch>
