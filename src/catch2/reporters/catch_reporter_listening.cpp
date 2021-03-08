@@ -6,6 +6,7 @@
 
 // SPDX-License-Identifier: BSL-1.0
 #include <catch2/reporters/catch_reporter_listening.hpp>
+#include <catch2/catch_config.hpp>
 
 #include <cassert>
 
@@ -18,6 +19,7 @@ namespace Catch {
     void ListeningReporter::addReporter(IStreamingReporterPtr&& reporter) {
         // TODO: we might need to output the captured stdout for reporters that do not want it captured
         m_preferences.shouldRedirectStdOut |= reporter->getPreferences().shouldRedirectStdOut;
+        m_preferences.shouldReportAllAssertions |= reporter->getPreferences().shouldReportAllAssertions;
         m_listeners.push_back( std::move( reporter ) );
     }
 
@@ -88,8 +90,15 @@ namespace Catch {
 
     // The return value indicates if the messages buffer should be cleared:
     bool ListeningReporter::assertionEnded( AssertionStats const& assertionStats ) {
-        for( auto const& listener : m_listeners ) {
-            static_cast<void>( listener->assertionEnded( assertionStats ) );
+        const bool alwaysReport =
+            assertionStats.assertionResult.getResultType() != ResultWas::Ok ||
+            m_config->includeSuccessfulResults();
+
+        for ( auto const& listener : m_listeners ) {
+            if ( alwaysReport ||
+                 listener->getPreferences().shouldReportAllAssertions ) {
+                static_cast<void>( listener->assertionEnded( assertionStats ) );
+            }
         }
         // the return value is unused, so it does not really matter what we return
         return true;
