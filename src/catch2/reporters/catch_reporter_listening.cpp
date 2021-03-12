@@ -7,6 +7,7 @@
 // SPDX-License-Identifier: BSL-1.0
 #include <catch2/reporters/catch_reporter_listening.hpp>
 #include <catch2/catch_config.hpp>
+#include <catch2/internal/catch_stream.hpp>
 
 #include <cassert>
 
@@ -16,10 +17,16 @@ namespace Catch {
         m_listeners.push_back( std::move( listener ) );
     }
 
-    void ListeningReporter::addReporter(IStreamingReporterPtr&& reporter) {
-        // TODO: we might need to output the captured stdout for reporters that do not want it captured
+    void ListeningReporter::addReporter( IStreamingReporterPtr&& reporter ) {
         m_preferences.shouldRedirectStdOut |= reporter->getPreferences().shouldRedirectStdOut;
-        m_preferences.shouldReportAllAssertions |= reporter->getPreferences().shouldReportAllAssertions;
+
+        // We will need to output the captured stdout if there are reporters
+        // that do not want it captured.
+        m_haveNoncapturingListeners |= !reporter->getPreferences().shouldRedirectStdOut;
+
+        m_preferences.shouldReportAllAssertions |=
+            reporter->getPreferences().shouldReportAllAssertions;
+
         m_listeners.push_back( std::move( reporter ) );
     }
 
@@ -100,7 +107,8 @@ namespace Catch {
                 static_cast<void>( listener->assertionEnded( assertionStats ) );
             }
         }
-        // the return value is unused, so it does not really matter what we return
+        // the return value is unused, so it does not really matter what we
+        // return
         return true;
     }
 
@@ -111,6 +119,15 @@ namespace Catch {
     }
 
     void ListeningReporter::testCaseEnded( TestCaseStats const& testCaseStats ) {
+        if ( m_preferences.shouldRedirectStdOut && m_haveNoncapturingListeners ) {
+            if ( !testCaseStats.stdOut.empty() ) {
+                Catch::cout() << testCaseStats.stdOut << std::flush;
+            }
+            if ( !testCaseStats.stdOut.empty() ) {
+                Catch::cerr() << testCaseStats.stdErr << std::flush;
+            }
+        }
+
         for ( auto const& listener : m_listeners ) {
             listener->testCaseEnded( testCaseStats );
         }
