@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testExecutions version="1"loose text artifact
->
+<testExecutions version="1">
   <file path="tests/<exe-name>/IntrospectiveTests/Clara.tests.cpp">
     <testCase name="Clara::Arg supports single-arg parse the way Opt does" duration="{duration}"/>
     <testCase name="Clara::Opt supports accept-many lambdas/Parsing fails on multiple options without accept_many" duration="{duration}"/>

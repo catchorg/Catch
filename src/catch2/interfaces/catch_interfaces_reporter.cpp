@@ -20,9 +20,6 @@
 
 namespace Catch {
 
-    ReporterConfig::ReporterConfig( IConfig const* _fullConfig )
-    :   m_stream( &_fullConfig->stream() ), m_fullConfig( _fullConfig ) {}
-
     ReporterConfig::ReporterConfig( IConfig const* _fullConfig, std::ostream& _stream )
     :   m_stream( &_stream ), m_fullConfig( _fullConfig ) {}
 

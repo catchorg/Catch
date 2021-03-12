@@ -17464,7 +17464,6 @@ There is no extra whitespace here
       <OverallResult success="false"/>
     </TestCase>
     <TestCase name="has printf" filename="tests/<exe-name>/UsageTests/Tricky.tests.cpp" >
-loose text artifact
       <OverallResult success="false"/>
     </TestCase>
     <TestCase name="is_unary_function" tags="[clara][compilation]" filename="tests/<exe-name>/IntrospectiveTests/Clara.tests.cpp" >

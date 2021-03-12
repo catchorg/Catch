@@ -8,8 +8,6 @@
 :test-result: PASS #1319: Sections can have description (even if it is not saved
 :test-result: PASS #1403
 :test-result: FAIL #1455 - INFO and WARN can start with a linebreak
-This would not be caught previously
-Nor would this
 :test-result: FAIL #1514: stderr/stdout is not captured in tests aborted by an exception
 :test-result: PASS #1548
 :test-result: PASS #1905 -- test spec parser properly clears internal state between compound tests
@@ -193,13 +191,8 @@ Nor would this
 :test-result: PASS Scenario: Do that thing with the thing
 :test-result: PASS Scenario: This is a really long scenario name to see how the list command deals with wrapping
 :test-result: PASS Scenario: Vector resizing affects size and capacity
-A string sent directly to stdout
-A string sent directly to stderr
-A string sent to stderr via clog
 :test-result: FAIL Sends stuff to stdout and stderr
 :test-result: PASS Some simple comparisons between doubles
-Message from section one
-Message from section two
 :test-result: FAIL Standard output from all sections is reported
 :test-result: FAIL StartsWith string matcher
 :test-result: PASS Static arrays are convertible to string
@@ -280,7 +273,6 @@ Message from section two
 :test-result: PASS estimate_clock_resolution
 :test-result: PASS even more nested SECTION tests
 :test-result: FAIL first tag
-loose text artifact
 :test-result: FAIL has printf
 :test-result: PASS is_unary_function
 :test-result: FAIL just failure

@@ -158,8 +158,6 @@ This warning message starts with a linebreak
 
 No assertions in test case '#1455 - INFO and WARN can start with a linebreak'
 
-This would not be caught previously
-Nor would this
 -------------------------------------------------------------------------------
 #1514: stderr/stdout is not captured in tests aborted by an exception
 -------------------------------------------------------------------------------
@@ -10449,9 +10447,6 @@ BDD.tests.cpp:<line number>: PASSED:
 with expansion:
   0 == 0
 
-A string sent directly to stdout
-A string sent directly to stderr
-A string sent to stderr via clog
 -------------------------------------------------------------------------------
 Sends stuff to stdout and stderr
 -------------------------------------------------------------------------------
@@ -10507,7 +10502,6 @@ Approx.tests.cpp:<line number>: PASSED:
 with expansion:
   Approx( 1.23 ) != 1.24
 
-Message from section one
 -------------------------------------------------------------------------------
 Standard output from all sections is reported
   one
@@ -10518,7 +10512,6 @@ Message.tests.cpp:<line number>
 
 No assertions in section 'one'
 
-Message from section two
 -------------------------------------------------------------------------------
 Standard output from all sections is reported
   two
@@ -14795,7 +14788,6 @@ Misc.tests.cpp:<line number>
 
 No assertions in test case 'first tag'
 
-loose text artifact
 -------------------------------------------------------------------------------
 has printf
 -------------------------------------------------------------------------------

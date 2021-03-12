@@ -18,8 +18,6 @@ Compilation.tests.cpp:<line number>: passed: h1 == h2 for: [1403 helper] == [140
 Message.tests.cpp:<line number>: warning: '
 This info message starts with a linebreak' with 1 message: '
 This warning message starts with a linebreak'
-This would not be caught previously
-Nor would this
 Tricky.tests.cpp:<line number>: failed: explicitly with 1 message: '1514'
 Compilation.tests.cpp:<line number>: passed: std::is_same<TypeList<int>, TypeList<int>>::value for: true
 CmdLine.tests.cpp:<line number>: passed: spec.matches(*fakeTestCase("spec . char")) for: true
@@ -1473,9 +1471,6 @@ BDD.tests.cpp:<line number>: passed: v.capacity() >= 10 for: 10 >= 10
 BDD.tests.cpp:<line number>: passed: v.size() == 0 for: 0 == 0
 BDD.tests.cpp:<line number>: passed: v.capacity() >= 10 for: 10 >= 10
 BDD.tests.cpp:<line number>: passed: v.size() == 0 for: 0 == 0
-A string sent directly to stdout
-A string sent directly to stderr
-A string sent to stderr via clog
 Approx.tests.cpp:<line number>: passed: d == Approx( 1.23 ) for: 1.23 == Approx( 1.23 )
 Approx.tests.cpp:<line number>: passed: d != Approx( 1.22 ) for: 1.23 != Approx( 1.22 )
 Approx.tests.cpp:<line number>: passed: d != Approx( 1.24 ) for: 1.23 != Approx( 1.24 )
@@ -1484,8 +1479,6 @@ Approx.tests.cpp:<line number>: passed: d != 1.22_a for: 1.23 != Approx( 1.22 )
 Approx.tests.cpp:<line number>: passed: Approx( d ) == 1.23 for: Approx( 1.23 ) == 1.23
 Approx.tests.cpp:<line number>: passed: Approx( d ) != 1.22 for: Approx( 1.23 ) != 1.22
 Approx.tests.cpp:<line number>: passed: Approx( d ) != 1.24 for: Approx( 1.23 ) != 1.24
-Message from section one
-Message from section two
 Matchers.tests.cpp:<line number>: failed: testStringForMatching(), StartsWith("This String") for: "this string contains 'abc' as a substring" starts with: "This String"
 Matchers.tests.cpp:<line number>: failed: testStringForMatching(), StartsWith("string", Catch::CaseSensitive::No) for: "this string contains 'abc' as a substring" starts with: "string" (case insensitive)
 ToStringGeneral.tests.cpp:<line number>: passed: Catch::Detail::stringify(singular) == "{ 1 }" for: "{ 1 }" == "{ 1 }"
@@ -2089,7 +2082,6 @@ InternalBenchmark.tests.cpp:<line number>: passed: res.outliers.total() == 0 for
 Misc.tests.cpp:<line number>: passed:
 Misc.tests.cpp:<line number>: passed:
 Misc.tests.cpp:<line number>: passed:
-loose text artifact
 Clara.tests.cpp:<line number>: passed: with 1 message: 'Catch::Clara::Detail::is_unary_function<decltype(unary1)>::value'
 Clara.tests.cpp:<line number>: passed: with 1 message: 'Catch::Clara::Detail::is_unary_function<decltype(unary2)>::value'
 Clara.tests.cpp:<line number>: passed: with 1 message: 'Catch::Clara::Detail::is_unary_function<decltype(unary3)>::value'

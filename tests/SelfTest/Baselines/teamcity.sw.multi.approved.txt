@@ -687,7 +687,6 @@ Misc.tests.cpp:<line number>|nexpression failed|n  REQUIRE( testCheckedIf( false
 ##teamcity[testStarted name='first tag']
 ##teamcity[testFinished name='first tag' duration="{duration}"]
 ##teamcity[testStarted name='has printf']
-loose text artifact
 ##teamcity[testFinished name='has printf' duration="{duration}"]
 ##teamcity[testStarted name='is_unary_function']
 ##teamcity[testFinished name='is_unary_function' duration="{duration}"]

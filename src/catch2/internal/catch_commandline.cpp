@@ -13,6 +13,7 @@
 #include <catch2/interfaces/catch_interfaces_reporter_registry.hpp>
 #include <catch2/interfaces/catch_interfaces_reporter.hpp>
 
+#include <algorithm>
 #include <fstream>
 #include <ctime>
 
@@ -115,16 +116,54 @@ namespace Catch {
                 return ParserResult::runtimeError( "Unrecognised verbosity, '" + verbosity + "'" );
             return ParserResult::ok( ParseResultType::Matched );
         };
-        auto const setReporter = [&]( std::string const& reporter ) {
+        auto const setReporter = [&]( std::string const& reporterSpec ) {
             IReporterRegistry::FactoryMap const& factories = getRegistryHub().getReporterRegistry().getFactories();
 
-            auto lcReporter = toLower( reporter );
+            // clear the default reporter
+            if (!config._nonDefaultReporterSpecifications) {
+                config.reporterSpecifications.clear();
+                config._nonDefaultReporterSpecifications = true;
+            }
+
+            // Exactly one of the reporters may be specified without an output
+            // file, in which case it defaults to the output specified by "-o"
+            // (or standard output).
+            auto colon = std::find(reporterSpec.begin(), reporterSpec.end(), ':');
+            const bool containsFileName = colon != reporterSpec.end();
+            std::string reporterName;
+            Option<std::string> outputFileName;
+            if (!containsFileName) {
+                reporterName = reporterSpec;
+            } else {
+                reporterName = reporterSpec.substr(0, colon-reporterSpec.begin());
+                outputFileName = reporterSpec.substr(colon-reporterSpec.begin()+1, reporterSpec.size());
+            }
+
+            auto lcReporter = toLower( reporterName );
             auto result = factories.find( lcReporter );
 
-            if( factories.end() != result )
-                config.reporterName = lcReporter;
-            else
-                return ParserResult::runtimeError( "Unrecognized reporter, '" + reporter + "'. Check available with --list-reporters" );
+            if( result == factories.end() )
+                return ParserResult::runtimeError( "Unrecognized reporter, '" + reporterName + "'. Check available with --list-reporters" );
+            if( containsFileName && outputFileName->empty() )
+                return ParserResult::runtimeError( "Reporter '" + reporterName + "' has empty filename specified as its output. Supply a filename or remove the colon to use the default output." );
+
+            config.reporterSpecifications.push_back({ std::move(reporterName), std::move(outputFileName) });
+
+            // It would be enough to check this only once at the very end, but there is
+            // not a place where we could call this check, so do it every time it could fail.
+            // For valid inputs, this is still called at most once.
+            if (!containsFileName) {
+                int n_reporters_without_file = 0;
+                for (auto const& spec : config.reporterSpecifications) {
+                    if (spec.outputFileName.none()) {
+                        n_reporters_without_file++;
+                    }
+                }
+                if (n_reporters_without_file > 1) {
+                    return ParserResult::runtimeError( "Only one reporter may have unspecified output file." );
+                }
+            }
+
             return ParserResult::ok( ParseResultType::Matched );
         };
 
@@ -149,10 +188,10 @@ namespace Catch {
             | Opt( config.showInvisibles )
                 ["-i"]["--invisibles"]
                 ( "show invisibles (tabs, newlines)" )
-            | Opt( config.outputFilename, "filename" )
+            | Opt( config.defaultOutputFilename, "filename" )
                 ["-o"]["--out"]
-                ( "output filename" )
-            | Opt( setReporter, "name" )
+                ( "default output filename" )
+            | Opt( accept_many, setReporter, "name[:output-file]" )
                 ["-r"]["--reporter"]
                 ( "reporter to use (defaults to console)" )
             | Opt( config.name, "name" )

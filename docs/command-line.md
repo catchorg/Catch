@@ -118,7 +118,7 @@ Test names containing special characters, such as `,` or `[` can specify them on
 <a id="choosing-a-reporter-to-use"></a>
 ## Choosing a reporter to use
 
-<pre>-r, --reporter &lt;reporter></pre>
+<pre>-r, --reporter &lt;reporter[:output-file]&gt;</pre>
 
 A reporter is an object that formats and structures the output of running tests, and potentially summarises the results. By default a console reporter is used that writes, IDE friendly, textual output. Catch comes bundled with some alternative reporters, but more can be added in client code.<br />
 The bundled reporters are:
@@ -130,6 +130,8 @@ The bundled reporters are:
 </pre>
 
 The JUnit reporter is an xml format that follows the structure of the JUnit XML Report ANT task, as consumed by a number of third-party tools, including Continuous Integration servers such as Jenkins. If not otherwise needed, the standard XML reporter is preferred as this is a streaming reporter, whereas the Junit reporter needs to hold all its results until the end so it can write the overall results into attributes of the root node.
+
+This option may be passed multiple times to use multiple (different) reporters  at the same time. See [Reporters](reporters.md#multiple-reporters) for details.
 
 <a id="breaking-into-the-debugger"></a>
 ## Breaking into the debugger

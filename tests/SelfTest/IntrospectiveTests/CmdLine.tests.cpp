@@ -3,12 +3,12 @@
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
+#include <catch2/catch_config.hpp>
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 #include <catch2/internal/catch_test_spec_parser.hpp>
 #include <catch2/catch_test_case_info.hpp>
-#include <catch2/catch_config.hpp>
 #include <catch2/internal/catch_commandline.hpp>
 #include <catch2/generators/catch_generators.hpp>
 
@@ -345,7 +345,7 @@ TEST_CASE( "Process can be configured on command line", "[config][command-line]"
         CHECK(config.shouldDebugBreak == false);
         CHECK(config.abortAfter == -1);
         CHECK(config.noThrow == false);
-        CHECK(config.reporterName == "console");
+        CHECK(config.reporterSpecifications == std::vector<Catch::ConfigData::ReporterAndFile>{ {"console", {}} });
 
         Catch::Config cfg(config);
         CHECK_FALSE(cfg.hasTestFilters());
@@ -384,29 +384,67 @@ TEST_CASE( "Process can be configured on command line", "[config][command-line]"
     }
 
     SECTION("reporter") {
+        using vec_ReporterAndFile = std::vector<Catch::ConfigData::ReporterAndFile>;
+        using namespace std::string_literals;
         SECTION("-r/console") {
-            CHECK(cli.parse({"test", "-r", "console"}));
+            auto result = cli.parse({"test", "-r", "console"});
+            CAPTURE(result.errorMessage());
+            CHECK(result);
 
-            REQUIRE(config.reporterName == "console");
+            REQUIRE(config.reporterSpecifications == vec_ReporterAndFile{ {"console", {}} });
         }
         SECTION("-r/xml") {
-            CHECK(cli.parse({"test", "-r", "xml"}));
+            auto result = cli.parse({"test", "-r", "xml"});
+            CAPTURE(result.errorMessage());
+            CHECK(result);
 
-            REQUIRE(config.reporterName == "xml");
+            REQUIRE(config.reporterSpecifications == vec_ReporterAndFile{ {"xml", {}} });
         }
         SECTION("--reporter/junit") {
-            CHECK(cli.parse({"test", "--reporter", "junit"}));
+            auto result = cli.parse({"test", "--reporter", "junit"});
+            CAPTURE(result.errorMessage());
+            CHECK(result);
 
-            REQUIRE(config.reporterName == "junit");
-        }
-        SECTION("Only one reporter is accepted") {
-            REQUIRE_FALSE(cli.parse({ "test", "-r", "xml", "-r", "junit" }));
+            REQUIRE(config.reporterSpecifications == vec_ReporterAndFile{ {"junit", {}} });
         }
         SECTION("must match one of the available ones") {
             auto result = cli.parse({"test", "--reporter", "unsupported"});
             CHECK(!result);
 
             REQUIRE_THAT(result.errorMessage(), Contains("Unrecognized reporter"));
+        }
+        SECTION("With output file") {
+            auto result = cli.parse({ "test", "-r", "console:out.txt" });
+            CAPTURE(result.errorMessage());
+            CHECK(result);
+            REQUIRE(config.reporterSpecifications == vec_ReporterAndFile{ {"console", "out.txt"s} });
+        }
+        SECTION("With Windows-like absolute path as output file") {
+            auto result = cli.parse({ "test", "-r", "console:C:\\Temp\\out.txt" });
+            CAPTURE(result.errorMessage());
+            CHECK(result);
+            REQUIRE(config.reporterSpecifications == vec_ReporterAndFile{ {"console", "C:\\Temp\\out.txt"s} });
+        }
+        SECTION("Output file cannot be empty") {
+            auto result = cli.parse({"test", "--reporter", "console:"});
+            CHECK(!result);
+
+            REQUIRE_THAT(result.errorMessage(), Contains("empty filename"));
+        }
+        SECTION("Multiple reporters") {
+            SECTION("All with output files") {
+                CHECK(cli.parse({ "test", "-r", "xml:output.xml", "-r", "junit:output-junit.xml" }));
+                REQUIRE(config.reporterSpecifications == vec_ReporterAndFile{ {"xml", "output.xml"s}, {"junit", "output-junit.xml"s} });
+            }
+            SECTION("Mixed output files and default output") {
+                CHECK(cli.parse({ "test", "-r", "xml:output.xml", "-r", "console" }));
+                REQUIRE(config.reporterSpecifications == vec_ReporterAndFile{ {"xml", "output.xml"s}, {"console", {}} });
+            }
+            SECTION("cannot have multiple reporters with default output") {
+                auto result = cli.parse({ "test", "-r", "console", "-r", "xml:output.xml", "-r", "junit" });
+                CHECK(!result);
+                REQUIRE_THAT(result.errorMessage(), Contains("Only one reporter may have unspecified output file."));
+            }
         }
     }
 
@@ -483,12 +521,12 @@ TEST_CASE( "Process can be configured on command line", "[config][command-line]"
         SECTION("-o filename") {
             CHECK(cli.parse({"test", "-o", "filename.ext"}));
 
-            REQUIRE(config.outputFilename == "filename.ext");
+            REQUIRE(config.defaultOutputFilename == "filename.ext");
         }
         SECTION("--out") {
             CHECK(cli.parse({"test", "--out", "filename.ext"}));
 
-            REQUIRE(config.outputFilename == "filename.ext");
+            REQUIRE(config.defaultOutputFilename == "filename.ext");
         }
     }
 

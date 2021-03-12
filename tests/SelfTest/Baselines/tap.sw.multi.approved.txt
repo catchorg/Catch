@@ -36,8 +36,6 @@ ok {test-number} - h1 == h2 for: [1403 helper] == [1403 helper]
 warning {test-number} - '
 This info message starts with a linebreak' with 1 message: '
 This warning message starts with a linebreak'
-This would not be caught previously
-Nor would this
 # #1514: stderr/stdout is not captured in tests aborted by an exception
 not ok {test-number} - explicitly with 1 message: '1514'
 # #1548
@@ -2622,9 +2620,6 @@ ok {test-number} - v.size() == 0 for: 0 == 0
 ok {test-number} - v.capacity() >= 10 for: 10 >= 10
 # Scenario: Vector resizing affects size and capacity
 ok {test-number} - v.size() == 0 for: 0 == 0
-A string sent directly to stdout
-A string sent directly to stderr
-A string sent to stderr via clog
 # Some simple comparisons between doubles
 ok {test-number} - d == Approx( 1.23 ) for: 1.23 == Approx( 1.23 )
 # Some simple comparisons between doubles
@@ -2641,8 +2636,6 @@ ok {test-number} - Approx( d ) == 1.23 for: Approx( 1.23 ) == 1.23
 ok {test-number} - Approx( d ) != 1.22 for: Approx( 1.23 ) != 1.22
 # Some simple comparisons between doubles
 ok {test-number} - Approx( d ) != 1.24 for: Approx( 1.23 ) != 1.24
-Message from section one
-Message from section two
 # StartsWith string matcher
 not ok {test-number} - testStringForMatching(), StartsWith("This String") for: "this string contains 'abc' as a substring" starts with: "This String"
 # StartsWith string matcher
@@ -3739,7 +3732,6 @@ ok {test-number} -
 ok {test-number} -
 # even more nested SECTION tests
 ok {test-number} -
-loose text artifact
 # is_unary_function
 ok {test-number} - with 1 message: 'Catch::Clara::Detail::is_unary_function<decltype(unary1)>::value'
 # is_unary_function
