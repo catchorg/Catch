@@ -252,7 +252,7 @@ check_outputs(
 for reporter, filename in zip(reporters, filenames):
     check_outputs(
         filename,
-        get_baselinesPath('{}.sw'.format(reporter)),
+        get_baselinesPath(filename),
         get_rawResultsPath(filename),
         get_filteredResultsPath(filename)
     )
