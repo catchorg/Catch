@@ -11,6 +11,7 @@ endif()
 option(CATCH_INSTALL_DOCS "Install documentation alongside library" ON)
 option(CATCH_INSTALL_EXTRAS "Install extras alongside library" ON)
 option(CATCH_DEVELOPMENT_BUILD "Build tests, enable warnings, enable Werror, etc" OFF)
+option(CATCH_FORCE_COLORED_OUTPUT "Always produce ANSI-colored output (GNU/Clang only)" OFF)
 
 include(CMakeDependentOption)
 cmake_dependent_option(CATCH_BUILD_TESTING "Build the SelfTest project" ON "CATCH_DEVELOPMENT_BUILD" OFF)
@@ -36,6 +37,14 @@ endif()
 
 
 project(Catch2 LANGUAGES CXX VERSION 3.0.0)
+
+if (${CATCH_FORCE_COLORED_OUTPUT})
+    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+       add_compile_options (-fdiagnostics-color=always)
+    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+       add_compile_options (-fcolor-diagnostics)
+    endif ()
+endif()
 
 # Provide path for scripts
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMake")
@@ -162,7 +171,7 @@ if (NOT_SUBPROJECT)
           DESTINATION
             ${CATCH_CMAKE_CONFIG_DESTINATION}
         )
-    
+
         # Install debugger helpers
         install(
           FILES

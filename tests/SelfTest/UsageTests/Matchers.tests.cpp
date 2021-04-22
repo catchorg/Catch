@@ -447,15 +447,45 @@ namespace { namespace MatchersTests {
                 REQUIRE_THAT(-10.f, WithinAbs(-9.6f, 0.5f));
             }
             SECTION("ULPs") {
-                REQUIRE_THAT(1.f, WithinULP(1.f, 0));
+                const float ONE_EPSILON_0 = nextafter(0.f, 1.f);
+                const float TWO_EPSILON_0 = nextafter(ONE_EPSILON_0, 1.f);
+                const float NEG_ONE_EPSILON_1 = nextafter(1.f, 0.f);
+                const float POS_ONE_EPSILON_1 = nextafter(1.f, 2.f);
+                const uint32_t ULP_DISTANCE_0_1 = 1065353216;
 
-                REQUIRE_THAT(nextafter(1.f, 2.f), WithinULP(1.f, 1));
-                REQUIRE_THAT(0.f, WithinULP(nextafter(0.f, 1.f), 1));
-                REQUIRE_THAT(1.f, WithinULP(nextafter(1.f, 0.f), 1));
-                REQUIRE_THAT(1.f, !WithinULP(nextafter(1.f, 2.f), 0));
-
                 REQUIRE_THAT(1.f, WithinULP(1.f, 0));
+                REQUIRE_THAT(-1.f, WithinULP(-1.f, 0));
+                REQUIRE_THAT(-1.f, !WithinULP(1.f, 0));
+                REQUIRE_THAT(1.f, !WithinULP(-1.f, 0));
                 REQUIRE_THAT(-0.f, WithinULP(0.f, 0));
+                REQUIRE_THAT(0.f, WithinULP(-0.f, 0));
+                REQUIRE_THAT(999e10f, WithinULP(999e10f, 0));
+                REQUIRE_THAT(-999e10f, WithinULP(-999e10f, 0));
+                REQUIRE_THAT(999e10f, !WithinULP(-999e10f, 0));
+                REQUIRE_THAT(-999e10f, !WithinULP(999e10f, 0));
+                REQUIRE_THAT(0.f, !WithinULP(1.f, 1));
+                REQUIRE_THAT(1.f, !WithinULP(0.f, 1));
+
+                REQUIRE_THAT(0.f, WithinULP(ONE_EPSILON_0, 1));
+                REQUIRE_THAT(-ONE_EPSILON_0, WithinULP(ONE_EPSILON_0, 2));
+                REQUIRE_THAT(0.f, WithinULP(1.f, ULP_DISTANCE_0_1));
+                REQUIRE_THAT(0.f, WithinULP(-1.f, ULP_DISTANCE_0_1));
+                REQUIRE_THAT(1.f, WithinULP(0.f, ULP_DISTANCE_0_1));
+                REQUIRE_THAT(-1.f, WithinULP(0.f, ULP_DISTANCE_0_1));
+                REQUIRE_THAT(-1.f, WithinULP(1.f, 2*ULP_DISTANCE_0_1));
+                REQUIRE_THAT(1.f, WithinULP(-1.f, 2*ULP_DISTANCE_0_1));
+
+                REQUIRE_THAT(0.f, WithinULP(ONE_EPSILON_0, 1));
+                REQUIRE_THAT(0.f, WithinULP(TWO_EPSILON_0, 2));
+                REQUIRE_THAT(1.f, WithinULP(NEG_ONE_EPSILON_1, 1));
+                REQUIRE_THAT(1.f, WithinULP(POS_ONE_EPSILON_1, 1));
+                REQUIRE_THAT(POS_ONE_EPSILON_1, WithinULP(1.f, 1));
+                REQUIRE_THAT(1.f, !WithinULP(NEG_ONE_EPSILON_1, 0));
+                REQUIRE_THAT(1.f, !WithinULP(POS_ONE_EPSILON_1, 0));
+
+                REQUIRE_THAT(0.f, WithinULP(TWO_EPSILON_0, 2));
+                REQUIRE_THAT(ONE_EPSILON_0, WithinULP(TWO_EPSILON_0, 1));
+                REQUIRE_THAT(POS_ONE_EPSILON_1, WithinULP(NEG_ONE_EPSILON_1, 2));
             }
             SECTION("Composed") {
                 REQUIRE_THAT(1.f, WithinAbs(1.f, 0.5) || WithinULP(1.f, 1));
@@ -503,15 +533,45 @@ namespace { namespace MatchersTests {
                 REQUIRE_THAT(-10., WithinAbs(-9.6, 0.5));
             }
             SECTION("ULPs") {
-                REQUIRE_THAT(1., WithinULP(1., 0));
+                const double ONE_EPSILON_0 = nextafter(0., 1.);
+                const double TWO_EPSILON_0 = nextafter(ONE_EPSILON_0, 1.);
+                const double NEG_ONE_EPSILON_1 = nextafter(1., 0.);
+                const double POS_ONE_EPSILON_1 = nextafter(1., 2.);
+                const uint64_t ULP_DISTANCE_0_1 = 4607182418800017408;
 
-                REQUIRE_THAT(nextafter(1., 2.), WithinULP(1., 1));
-                REQUIRE_THAT(0.,  WithinULP(nextafter(0., 1.), 1));
-                REQUIRE_THAT(1.,  WithinULP(nextafter(1., 0.), 1));
-                REQUIRE_THAT(1., !WithinULP(nextafter(1., 2.), 0));
-
                 REQUIRE_THAT(1., WithinULP(1., 0));
+                REQUIRE_THAT(-1., WithinULP(-1., 0));
+                REQUIRE_THAT(-1., !WithinULP(1., 0));
+                REQUIRE_THAT(1., !WithinULP(-1., 0));
                 REQUIRE_THAT(-0., WithinULP(0., 0));
+                REQUIRE_THAT(0., WithinULP(-0., 0));
+                REQUIRE_THAT(999e10, WithinULP(999e10, 0));
+                REQUIRE_THAT(-999e10, WithinULP(-999e10, 0));
+                REQUIRE_THAT(999e10, !WithinULP(-999e10, 0));
+                REQUIRE_THAT(-999e10, !WithinULP(999e10, 0));
+                REQUIRE_THAT(0., !WithinULP(1., 1));
+                REQUIRE_THAT(1., !WithinULP(0., 1));
+
+                REQUIRE_THAT(0., WithinULP(ONE_EPSILON_0, 1));
+                REQUIRE_THAT(-ONE_EPSILON_0, WithinULP(ONE_EPSILON_0, 2));
+                REQUIRE_THAT(0., WithinULP(1., ULP_DISTANCE_0_1));
+                REQUIRE_THAT(0., WithinULP(-1., ULP_DISTANCE_0_1));
+                REQUIRE_THAT(1., WithinULP(0., ULP_DISTANCE_0_1));
+                REQUIRE_THAT(-1., WithinULP(0., ULP_DISTANCE_0_1));
+                REQUIRE_THAT(-1., WithinULP(1., 2*ULP_DISTANCE_0_1));
+                REQUIRE_THAT(1., WithinULP(-1., 2*ULP_DISTANCE_0_1));
+
+                REQUIRE_THAT(0., WithinULP(ONE_EPSILON_0, 1));
+                REQUIRE_THAT(0., WithinULP(TWO_EPSILON_0, 2));
+                REQUIRE_THAT(1., WithinULP(NEG_ONE_EPSILON_1, 1));
+                REQUIRE_THAT(1., WithinULP(POS_ONE_EPSILON_1, 1));
+                REQUIRE_THAT(POS_ONE_EPSILON_1, WithinULP(1., 1));
+                REQUIRE_THAT(1., !WithinULP(NEG_ONE_EPSILON_1, 0));
+                REQUIRE_THAT(1., !WithinULP(POS_ONE_EPSILON_1, 0));
+
+                REQUIRE_THAT(0., WithinULP(TWO_EPSILON_0, 2));
+                REQUIRE_THAT(ONE_EPSILON_0, WithinULP(TWO_EPSILON_0, 1));
+                REQUIRE_THAT(POS_ONE_EPSILON_1, WithinULP(NEG_ONE_EPSILON_1, 2));
             }
             SECTION("Composed") {
                 REQUIRE_THAT(1., WithinAbs(1., 0.5) || WithinULP(2., 1));
@@ -541,6 +601,14 @@ namespace { namespace MatchersTests {
             REQUIRE_THAT(NAN, !WithinRel(NAN));
             REQUIRE_THAT(1., !WithinRel(NAN));
             REQUIRE_THAT(NAN, !WithinRel(1.));
+            REQUIRE_THAT(INFINITY, WithinULP(INFINITY, 0));
+            REQUIRE_THAT(-INFINITY, WithinULP(-INFINITY, 0));
+            REQUIRE_THAT(INFINITY, !WithinULP(-INFINITY, 0));
+            REQUIRE_THAT(-INFINITY, !WithinULP(INFINITY, 0));
+            REQUIRE_THAT(-INFINITY, !WithinULP(static_cast<float>(INFINITY), std::numeric_limits<uint32_t>::max()));
+            REQUIRE_THAT(INFINITY, !WithinULP(static_cast<float>(-INFINITY), std::numeric_limits<uint32_t>::max()));
+            REQUIRE_THAT(1., !WithinULP(INFINITY, std::numeric_limits<uint32_t>::max()));
+            REQUIRE_THAT(1., !WithinULP(-INFINITY, std::numeric_limits<uint32_t>::max()));
         }
 
         TEST_CASE("Arbitrary predicate matcher", "[matchers][generic]") {
