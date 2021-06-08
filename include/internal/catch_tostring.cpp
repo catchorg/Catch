@@ -73,7 +73,8 @@ std::string fpToString( T value, int precision ) {
 
     ReusableStringStream rss;
     rss << std::setprecision( precision )
-        << std::fixed
+		<< std::fixed
+//        << std::scientific    // would be nice if we could switch between these two !
         << value;
     std::string d = rss.str();
     std::size_t i = d.find_last_not_of( '0' );
@@ -249,6 +250,13 @@ int StringMaker<double>::precision = 10;
 std::string StringMaker<double>::convert(double value) {
     return fpToString(value, precision);
 }
+
+int StringMaker<long double>::precision = 15;
+
+std::string StringMaker<long double>::convert(long double value) {
+    return fpToString(value, precision);
+}
+
 
 std::string ratio_string<std::atto>::symbol() { return "a"; }
 std::string ratio_string<std::femto>::symbol() { return "f"; }

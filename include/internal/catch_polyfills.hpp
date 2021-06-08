@@ -10,6 +10,7 @@
 namespace Catch {
     bool isnan(float f);
     bool isnan(double d);
+    bool isnan(long double d);
 }
 
 #endif // TWOBLUECUBES_CATCH_POLYFILLS_HPP_INCLUDED

@@ -18,12 +18,18 @@ namespace Catch {
     bool isnan(double d) {
         return std::isnan(d);
     }
+    bool isnan(long double d) {
+        return std::isnan(d);
+    }
 #else
     // For now we only use this for embarcadero
     bool isnan(float f) {
         return std::_isnan(f);
     }
     bool isnan(double d) {
+        return std::_isnan(d);
+    }
+    bool isnan(long double d) {
         return std::_isnan(d);
     }
 #endif

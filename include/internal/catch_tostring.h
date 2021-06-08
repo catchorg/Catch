@@ -276,6 +276,12 @@ namespace Catch {
         static int precision;
     };
 
+    template<>
+    struct StringMaker<long double> {
+        static std::string convert(long double value);
+        static int precision;
+    };
+
     template <typename T>
     struct StringMaker<T*> {
         template <typename U>
