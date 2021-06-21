@@ -88,6 +88,7 @@ include(Catch)
 catch_discover_tests(foo)
 ```
 
+Note, in case of using `FetchContent`, `find_package(Catch2 REQUIRED)` should be substituted with `list(APPEND CMAKE_MODULE_PATH "${Catch2_SOURCE_DIR}/contrib")`.
 
 #### Customization
 `catch_discover_tests` can be given several extra argumets:
