@@ -11,6 +11,7 @@ endif()
 option(CATCH_INSTALL_DOCS "Install documentation alongside library" ON)
 option(CATCH_INSTALL_EXTRAS "Install extras alongside library" ON)
 option(CATCH_DEVELOPMENT_BUILD "Build tests, enable warnings, enable Werror, etc" OFF)
+option(CATCH_EXPERIMENTAL_SHARED "Builds Catch2 as shared library and sets WINDOWS_EXPORT_ALL_SYMBOLS on it" OFF)
 
 include(CMakeDependentOption)
 cmake_dependent_option(CATCH_BUILD_TESTING "Build the SelfTest project" ON "CATCH_DEVELOPMENT_BUILD" OFF)
@@ -57,6 +58,9 @@ if(CATCH_TEST_USE_WMAIN)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /ENTRY:wmainCRTStartup")
 endif()
 
+if(CATCH_EXPERIMENTAL_SHARED)
+    set(BUILD_SHARED_LIBS ON)
+endif()
 
 # Basic paths
 set(CATCH_DIR ${CMAKE_CURRENT_SOURCE_DIR})

@@ -233,7 +233,7 @@ set(REPORTER_FILES ${REPORTER_HEADERS} ${REPORTER_SOURCES})
 
 # Fixme: STATIC because for dynamic, we would need to handle visibility
 # and I don't want to do the annotations right now
-add_library(Catch2 STATIC
+add_library(Catch2
   ${REPORTER_FILES}
   ${INTERNAL_FILES}
   ${BENCHMARK_HEADERS}
@@ -245,6 +245,11 @@ add_library(Catch2::Catch2 ALIAS Catch2)
 if (ANDROID)
     target_link_libraries(Catch2 INTERFACE log)
 endif()
+
+if(CATCH_EXPERIMENTAL_SHARED)
+    set_target_properties(Catch2 PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
+
 
 # depend on bunch of C++11 and C++14 features to have C++14 enabled by default
 target_compile_features(Catch2
@@ -289,7 +294,7 @@ set_target_properties(Catch2WithMain
     OUTPUT_NAME "Catch2Main"
 )
 
-if (NOT_SUBPROJECT)
+if (NOT_SUBPROJECT)    
     # create and install an export set for catch target as Catch2::Catch
     install(
       TARGETS
@@ -297,8 +302,10 @@ if (NOT_SUBPROJECT)
         Catch2WithMain
       EXPORT
         Catch2Targets
-      DESTINATION
-        ${CMAKE_INSTALL_LIBDIR}
+      # This will not be needed from cmake 3.14 on
+      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
 
 

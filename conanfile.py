@@ -13,7 +13,10 @@ class CatchConan(ConanFile):
     exports_sources = ("src/*", "CMakeLists.txt", "CMake/*", "extras/*")
 
     settings = "os", "compiler", "build_type", "arch"
-
+    
+    options = {"shared": [True, False]}
+    default_options = {"shared": False}
+    
     generators = "cmake"
 
     def _configure_cmake(self):
@@ -21,6 +24,7 @@ class CatchConan(ConanFile):
         cmake.definitions["BUILD_TESTING"] = "OFF"
         cmake.definitions["CATCH_INSTALL_DOCS"] = "OFF"
         cmake.definitions["CATCH_INSTALL_HELPERS"] = "ON"
+        cmake.definitions['CATCH_EXPERIMENTAL_SHARED'] = self.options.shared
         cmake.configure(build_folder="build")
         return cmake
 
