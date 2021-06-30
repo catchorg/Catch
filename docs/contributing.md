@@ -94,7 +94,7 @@ cmake --build debug-build
 cd debug-build
 ctest -j 4 --output-on-failure -C Debug
 ```
-<sup><a href='/tools/scripts/buildAndTest.sh#L6-L19' title='File snippet `catch2-build-and-test` was extracted from'>snippet source</a> | <a href='#snippet-catch2-build-and-test' title='Navigate to start of snippet `catch2-build-and-test`'>anchor</a></sup>
+<sup><a href='/tools/scripts/buildAndTest.sh#L6-L19' title='Snippet source file'>snippet source</a> | <a href='#snippet-catch2-build-and-test' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 For convenience, the above commands are in the script `tools/scripts/buildAndTest.sh`, and can be run like this:
