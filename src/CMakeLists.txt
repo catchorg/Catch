@@ -271,11 +271,20 @@ target_compile_features(Catch2
     cxx_variadic_macros
 )
 
-target_include_directories(Catch2
-  PUBLIC
-    $<BUILD_INTERFACE:${SOURCES_DIR}/..>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-)
+
+if (NOT_SUBPROJECT)
+    target_include_directories(Catch2
+      PUBLIC
+        $<BUILD_INTERFACE:${SOURCES_DIR}/..>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+    )
+else()
+    target_include_directories(Catch2
+      SYSTEM PUBLIC
+        $<BUILD_INTERFACE:${SOURCES_DIR}/..>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+    )
+endif()
 
 
 add_library(Catch2WithMain STATIC
