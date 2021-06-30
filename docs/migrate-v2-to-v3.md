@@ -1,4 +1,9 @@
 <a id="top"></a>
+# Changes overview
+- Catch2 now suggests statically compiled library as its distribution model.
+- Functionality is split into multiple header files.
+- ...
+
 # Migrating from v2 to v3
 
 If you want to migrate to v3, there are two basic approaches to do so.
