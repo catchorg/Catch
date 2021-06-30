@@ -56,6 +56,8 @@ std::uint64_t Fibonacci(std::uint64_t number) {
 ```
 Now the most straight forward way to benchmark this function, is just adding a `BENCHMARK` macro to our test case:
 ```c++
+#define CATCH_CONFIG_ENABLE_BENCHMARKING // This tells Catch to enable BENCHMARK macro
+
 TEST_CASE("Fibonacci") {
     CHECK(Fibonacci(0) == 1);
     // some more asserts..
