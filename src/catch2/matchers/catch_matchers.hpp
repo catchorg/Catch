@@ -41,6 +41,12 @@ namespace Matchers {
 
     template<typename ObjectT>
     struct MatcherMethod {
+        MatcherMethod() = default;
+        virtual ~MatcherMethod() = default;
+
+        MatcherMethod(MatcherMethod const&) = default;
+        MatcherMethod(MatcherMethod&&) = default;
+
         virtual bool match(ObjectT const& arg) const = 0;
     };
 
