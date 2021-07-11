@@ -74,6 +74,8 @@ namespace Catch {
     double Config::minDuration() const                 { return m_data.minDuration; }
     TestRunOrder Config::runOrder() const              { return m_data.runOrder; }
     unsigned int Config::rngSeed() const               { return m_data.rngSeed; }
+    unsigned int Config::shardCount() const            { return m_data.shardCount; }
+    unsigned int Config::shardIndex() const            { return m_data.shardIndex; }
     UseColour Config::useColour() const                { return m_data.useColour; }
     bool Config::shouldDebugBreak() const              { return m_data.shouldDebugBreak; }
     int Config::abortAfter() const                     { return m_data.abortAfter; }
