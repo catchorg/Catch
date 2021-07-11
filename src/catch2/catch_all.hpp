@@ -82,6 +82,7 @@
 #include <catch2/internal/catch_result_type.hpp>
 #include <catch2/internal/catch_run_context.hpp>
 #include <catch2/internal/catch_section.hpp>
+#include <catch2/internal/catch_sharding.hpp>
 #include <catch2/internal/catch_singletons.hpp>
 #include <catch2/internal/catch_source_line_info.hpp>
 #include <catch2/internal/catch_startup_exception_registry.hpp>

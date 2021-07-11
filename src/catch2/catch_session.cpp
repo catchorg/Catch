@@ -16,6 +16,7 @@
 #include <catch2/catch_version.hpp>
 #include <catch2/interfaces/catch_interfaces_reporter.hpp>
 #include <catch2/internal/catch_startup_exception_registry.hpp>
+#include <catch2/internal/catch_sharding.hpp>
 #include <catch2/internal/catch_textflow.hpp>
 #include <catch2/internal/catch_windows_h_proxy.hpp>
 #include <catch2/reporters/catch_reporter_listening.hpp>
@@ -78,23 +79,7 @@ namespace Catch {
                         m_tests.insert(match.tests.begin(), match.tests.end());
                 }
 
-                if (m_config->shardCount() > 1) {
-                    int shardCount = m_config->shardCount();
-                    if (shardCount > m_tests.size()) {
-                        shardCount = m_tests.size();
-                    }
-
-                    int shardIndex = m_config->shardIndex();
-                    if (shardIndex >= shardCount) {
-                        shardIndex = shardCount - 1;
-                    }
-
-                    int shardSize = m_tests.size() / shardCount;
-                    auto firstIndex = std::next(m_tests.begin(), shardSize * shardIndex);
-                    auto lastIndex = std::next(firstIndex, shardSize);
-
-                    m_tests = std::set(firstIndex, lastIndex);
-                }
+                m_tests = createShard(m_tests, *m_config);
             }
 
             Totals execute() {

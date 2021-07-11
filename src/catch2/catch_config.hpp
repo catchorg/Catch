@@ -35,8 +35,8 @@ namespace Catch {
         int abortAfter = -1;
         unsigned int rngSeed = 0;
 
-        int shardCount = 1;
-        int shardIndex = 0;
+        unsigned int shardCount = 1;
+        unsigned int shardIndex = 0;
 
         bool benchmarkNoAnalysis = false;
         unsigned int benchmarkSamples = 100;
