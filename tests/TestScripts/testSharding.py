@@ -19,7 +19,7 @@ from collections import namedtuple
 
 TestCase = namedtuple("TestCase", ("shard_count", "order", "tags", "rng_seed"))
 
-def list_tests(self_test_exe, test_case, shard_index=None): # tags, rng_seed, shard_count=None, shard_index=None):
+def list_tests(self_test_exe, test_case, shard_index=None):
     cmd = [
         self_test_exe,
         '--reporter', 'xml',
@@ -83,14 +83,18 @@ def check_listed_tests_match(all_tests, sharded_tests):
     total_test_count = len(all_tests)
     sharded_test_count = sum([len(shard) for shard in sharded_tests])
 
-    assert total_test_count == sharded_test_count, f"Sharded test count ({sharded_test_count}) does not match the total test count ({total_test_count})"
+    assert total_test_count == sharded_test_count, (
+        "Sharded test count ({}) does not match the total test count ({})".format(sharded_test_count, total_test_count)
+    )
 
     # Make sure all the tests in the shards are from the full list, in the same order. Together with the previous check, this
     # ensures that all tests in the full list, are in the shards without duplication.
     test_index = 0
     for shard_index, shard in enumerate(sharded_tests):
         for shard_test_index, test_name in enumerate(shard):
-            assert test_name == all_tests[test_index], f"Sharding does not split the test list while maintaining order {test_index}:\n'{test_name}' vs '{all_tests[test_index]}'"
+            assert test_name == all_tests[test_index], (
+                "Sharding does not split the test list while maintaining order {}:\n'{}' vs '{}'".format(test_index, test_name, all_tests[test_index])
+            )
 
             test_index += 1
 
@@ -102,7 +106,9 @@ def check_listed_and_executed_tests_match(listed_tests, executed_tests):
         listed_string = "\n".join(listed_shard_names)
         exeucted_string = "\n".join(executed_shard_names)
 
-        assert listed_shard_names == executed_shard_names, f"Executed tests do not match the listed tests:\nExecuted:\n{exeucted_string}\n\nListed:\n{listed_string}"
+        assert listed_shard_names == executed_shard_names, (
+            "Executed tests do not match the listed tests:\nExecuted:\n{}\n\nListed:\n{}".format(exeucted_string, listed_string)
+        )
 
 def test_shards_cover_all_test(self_test_exe, test_case):
     all_tests = list_tests(self_test_exe, test_case)
