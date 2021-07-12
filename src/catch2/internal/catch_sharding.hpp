@@ -17,16 +17,18 @@ namespace Catch {
     template<typename CONTAINER>
     CONTAINER createShard(CONTAINER const& container, IConfig const& config) {
         if (config.shardCount() > 1) {
-            unsigned int totalTestCount = container.size();
+            size_t totalTestCount = container.size();
 
-            unsigned int shardCount = (std::min)(config.shardCount(), totalTestCount);
-            unsigned int shardIndex = (std::min)(config.shardIndex(), shardCount - 1);
+            size_t shardCount = (std::min)(size_t(config.shardCount()), totalTestCount);
+            size_t shardIndex = (std::min)(size_t(config.shardIndex()), shardCount - 1);
 
-            double shardSize = totalTestCount / static_cast<double>(shardCount);
-            double startIndex = shardIndex * shardSize;
+            double shardSize = totalTestCount / double(shardCount);
 
-            auto startIterator = std::next(container.begin(), std::floor(startIndex));
-            auto endIterator = std::next(container.begin(), std::floor(startIndex + shardSize));
+            size_t startIndex = size_t(std::floor(shardIndex * shardSize));
+            size_t endIndex = size_t(std::floor((shardIndex + 1) * shardSize));
+
+            auto startIterator = std::next(container.begin(), startIndex);
+            auto endIterator = std::next(container.begin(), endIndex);
 
             // Since we are calculating the end index with floating point numbers, but flooring 
             // the value, we can't guarantee that the end index of the last shard lines up exactly
