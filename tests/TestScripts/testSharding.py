@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
 """
-This test script verifies that the random ordering of tests inside
-Catch2 is invariant in regards to subsetting. This is done by running
-the binary 3 times, once with all tests selected, and twice with smaller
-subsets of tests selected, and verifying that the selected tests are in
-the same relative order.
+This test script verifies that sharding tests does change which tests are run.
+This is done by running the binary multiple times, once to list all the tests,
+once per shard to list the tests for that shard, and once again per shard to
+execute the tests. The sharded lists are compared to the full list to ensure
+none are skipped, duplicated, and that the order remains the same. This process
+is repeated for multiple command line argument combinations to ensure sharding
+works with different filters and test orderings.
 """
 
 import itertools
