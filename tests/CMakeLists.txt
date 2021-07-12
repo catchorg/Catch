@@ -309,6 +309,9 @@ set_tests_properties(TagAlias PROPERTIES
 add_test(NAME RandomTestOrdering COMMAND ${PYTHON_EXECUTABLE}
   ${CATCH_DIR}/tests/TestScripts/testRandomOrder.py $<TARGET_FILE:SelfTest>)
 
+add_test(NAME TestSharding COMMAND ${PYTHON_EXECUTABLE}
+  ${CATCH_DIR}/tests/TestScripts/testSharding.py $<TARGET_FILE:SelfTest>)
+
 add_test(NAME CheckConvenienceHeaders
   COMMAND
     ${PYTHON_EXECUTABLE} ${CATCH_DIR}/tools/scripts/checkConvenienceHeaders.py

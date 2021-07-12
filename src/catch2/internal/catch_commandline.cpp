@@ -218,6 +218,12 @@ namespace Catch {
             | Opt( config.benchmarkWarmupTime, "benchmarkWarmupTime" )
                 ["--benchmark-warmup-time"]
                 ( "amount of time in milliseconds spent on warming up each test (default: 100)" )
+            | Opt( config.shardCount, "shard count" )
+                ["--shard-count"]
+                ( "split the tests to execute into this many groups" )
+            | Opt( config.shardIndex, "shard index" )
+                ["--shard-index"]
+                ( "index of the group of tests to execute (see --shard-count)" )
             | Arg( config.testsOrTags, "test name|pattern|tags" )
                 ( "which test or tests to use" );
 

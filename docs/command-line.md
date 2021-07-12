@@ -29,6 +29,7 @@
 [Specify the section to run](#specify-the-section-to-run)<br>
 [Filenames as tags](#filenames-as-tags)<br>
 [Override output colouring](#override-output-colouring)<br>
+[Test Sharding](#test-sharding)<br>
 
 Catch works quite nicely without any command line options at all - but for those times when you want greater control the following options are available.
 Click one of the following links to take you straight to that option - or scroll on to browse the available options.
@@ -67,6 +68,8 @@ Click one of the following links to take you straight to that option - or scroll
 <a href="#benchmark-no-analysis">                       `    --benchmark-no-analysis`</a><br />
 <a href="#benchmark-warmup-time">                       `    --benchmark-warmup-time`</a><br />
 <a href="#use-colour">                                  `    --use-colour`</a><br />
+<a href="#test-sharding">                               `    --shard-count`</a><br />
+<a href="#test-sharding">                               `    --shard-index`</a><br />
 
 </br>
 
@@ -417,6 +420,16 @@ processing of output.
 
 `--use-colour yes` forces coloured output, `--use-colour no` disables coloured
 output. The default behaviour is `--use-colour auto`.
+
+<a id="test-sharding"></a>
+## Test Sharding
+<pre>--shard-count <#number of shards>, --shard-index <#shard index to run></pre>
+When `--shard-count <#number of shards>` is used, the tests to execute will be split evenly in to the given number of sets,
+identified by indicies starting at 0. The tests in the set given by `--shard-index <#shard index to run>` will be executed.
+The default shard count is `1`, and the default index to run is `0`. If the shard index is greater than the number of shards,
+the last shard will be run.
+
+This is useful when you want to split test execution across multiple processes, as is done with [Bazel test sharding](https://docs.bazel.build/versions/main/test-encyclopedia.html#test-sharding). 
 
 ---
 

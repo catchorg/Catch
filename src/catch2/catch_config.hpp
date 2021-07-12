@@ -35,6 +35,9 @@ namespace Catch {
         int abortAfter = -1;
         unsigned int rngSeed = 0;
 
+        unsigned int shardCount = 1;
+        unsigned int shardIndex = 0;
+
         bool benchmarkNoAnalysis = false;
         unsigned int benchmarkSamples = 100;
         double benchmarkConfidenceInterval = 0.95;
@@ -98,6 +101,8 @@ namespace Catch {
         double minDuration() const override;
         TestRunOrder runOrder() const override;
         unsigned int rngSeed() const override;
+        unsigned int shardCount() const override;
+        unsigned int shardIndex() const override;
         UseColour useColour() const override;
         bool shouldDebugBreak() const override;
         int abortAfter() const override;
